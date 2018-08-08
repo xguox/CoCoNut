@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20180808093102) do
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.string "sku"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.datetime "deleted_at"
   end
 
