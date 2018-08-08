@@ -1,0 +1,6 @@
+development:
+  adapter: postgresql
+  database: coconut_development
+  pool: 5
+  port: 5432
+  host: localhost
