@@ -1,1 +1,3 @@
 # CoCoNut
+
+`go build ./ && ./coconut`
