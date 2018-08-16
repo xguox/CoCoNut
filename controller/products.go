@@ -3,6 +3,7 @@ package controller
 import (
 	"coconut/db"
 	"coconut/model"
+	"log"
 	"net/http"
 	"time"
 
@@ -16,7 +17,7 @@ func CreateProduct(c *gin.Context) {
 
 func FetchAllProducts(c *gin.Context) {
 	products := model.GetProducts()
-
+	log.Println("测试 .realize.yaml mark II")
 	if len(products) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 		return

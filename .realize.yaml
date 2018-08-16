@@ -1,0 +1,23 @@
+settings:
+  legacy:
+    force: false
+    interval: 0s
+schema:
+- name: cocoNUT
+  path: .
+  commands:
+    run:
+      status: true
+  watcher:
+    extensions:
+    - go
+    paths:
+    - /
+    scripts:
+      - type: after
+        command: ./coconut
+        output: true
+    ignored_paths:
+    - .git
+    - .realize
+    - vendor
