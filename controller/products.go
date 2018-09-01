@@ -5,7 +5,6 @@ import (
 	"coconut/model"
 	. "coconut/serializer"
 
-	"log"
 	"net/http"
 	"time"
 
@@ -13,13 +12,12 @@ import (
 )
 
 func CreateProduct(c *gin.Context) {
-	_product := model.CreateProduct(c.PostForm("name"), c.PostForm("sku"))
+	_product := model.CreateProduct(c.PostForm("name"))
 	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Product created successfully!", "resourceId": _product.ID})
 }
 
 func FetchAllProducts(c *gin.Context) {
 	products := model.GetProducts()
-	log.Println("测试 .realize.yaml mark II")
 	if len(products) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 		return
@@ -48,7 +46,7 @@ func UpdateProduct(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
-		_product.Update(c.PostForm("name"), c.PostForm("sku"))
+		_product.Update(c.PostForm("name"))
 		s := ProductSerializer{_product}
 		c.JSON(http.StatusOK, s.Response())
 	}

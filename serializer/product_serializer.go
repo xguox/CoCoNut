@@ -15,8 +15,7 @@ type ProductsSerializer struct {
 
 type ProductResponse struct {
 	ID        uint      `json:"id"`
-	Name      string    `json:"name"`
-	Sku       string    `json:"sku"`
+	Title     string    `json:"title"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -24,8 +23,7 @@ type ProductResponse struct {
 func (s *ProductSerializer) Response() ProductResponse {
 	response := ProductResponse{
 		ID:        s.ID,
-		Name:      s.Name,
-		Sku:       s.Sku,
+		Title:     s.Title,
 		CreatedAt: s.CreatedAt,
 		UpdatedAt: s.UpdatedAt,
 	}

@@ -39,15 +39,14 @@ func GetProductById(id string) (Product, error) {
 	}
 }
 
-func CreateProduct(name, sku string) Product {
-	tp := Product{Name: name, Sku: sku}
+func CreateProduct(title string) Product {
+	tp := Product{Title: title}
 	db.PG.Create(&tp)
 	return tp
 }
 
-// TODO: 所有字段都能传参更改, 现在只能改 name, sku,
-func (p *Product) Update(name, sku string) {
-	p.Name = name
-	p.Sku = sku
+// TODO: 所有字段都能传参更改
+func (p *Product) Update(title string) {
+	p.Title = title
 	db.PG.Save(&p)
 }
