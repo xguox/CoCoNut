@@ -3,6 +3,8 @@ package controller
 import (
 	"coconut/db"
 	"coconut/model"
+	. "coconut/serializer"
+
 	"log"
 	"net/http"
 	"time"
@@ -22,8 +24,9 @@ func FetchAllProducts(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 		return
 	}
+	s := ProductsSerializer{products}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": products})
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": s.Response()})
 }
 
 func FetchProduct(c *gin.Context) {
@@ -33,7 +36,8 @@ func FetchProduct(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
-		c.JSON(http.StatusOK, _product)
+		s := ProductSerializer{_product}
+		c.JSON(http.StatusOK, s.Response())
 	}
 }
 
@@ -45,7 +49,8 @@ func UpdateProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
 		_product.Update(c.PostForm("name"), c.PostForm("sku"))
-		c.JSON(http.StatusOK, _product)
+		s := ProductSerializer{_product}
+		c.JSON(http.StatusOK, s.Response())
 	}
 }
 

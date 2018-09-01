@@ -8,9 +8,8 @@ import (
 
 type Product struct {
 	gorm.Model
-	//struct字段之后的tag 因为输出字段的名称默认都是大写的，能够被赋值的字段必须是可导出字段(即首字母大写），同时JSON解析的时候只会解析能找得到的字段，找不到的字段会被忽略，要是想通过小写的方式输出 就需要采用json tag的形式
-	Name string `json:name`
-	Sku  string `json:sku`
+	Name string `json:"name"`
+	Sku  string `json:"sku"`
 }
 
 func GetProducts() []Product {
