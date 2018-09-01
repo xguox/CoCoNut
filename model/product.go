@@ -2,14 +2,26 @@ package model
 
 import (
 	"coconut/db"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
 
 type Product struct {
 	gorm.Model
-	Name string `json:"name"`
-	Sku  string `json:"sku"`
+	Title       string
+	BodyHTML    *string
+	PublishedAt *time.Time
+	Vendor      *string
+	Keywords    *string
+	Price       float32
+	Slug        string
+	StockQty    int
+	Status      int
+	HotSale     bool
+	NewArrival  bool
+	Cover       string
+	Category    Category
 }
 
 func GetProducts() []Product {
