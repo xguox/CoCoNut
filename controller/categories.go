@@ -3,6 +3,8 @@ package controller
 import (
 	"coconut/db"
 	"coconut/model"
+	"coconut/util"
+
 	"net/http"
 	"time"
 
@@ -10,21 +12,20 @@ import (
 )
 
 func CreateCategory(c *gin.Context) {
-	var category model.Category
-	err := c.BindJSON(&category)
-	if err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+	v := model.CategoryValidator{}
+	if err := v.Bind(c); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
 		return
 	}
 
-	if err := model.SaveData(&category); err != nil {
+	if err := model.SaveData(&v.CategoryModel); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"id":   category.ID,
-		"name": category.Name,
+		"id":   v.CategoryModel.ID,
+		"name": v.CategoryModel.Name,
 	})
 }
 
