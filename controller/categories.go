@@ -3,6 +3,7 @@ package controller
 import (
 	"coconut/db"
 	"coconut/model"
+
 	"coconut/util"
 
 	"net/http"
@@ -44,25 +45,28 @@ func FetchCategories(c *gin.Context) {
 func UpdateCategory(c *gin.Context) {
 	id := c.Params.ByName("id")
 	category, err := model.GetCategoryById(id)
+
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "category not found"})
-	} else {
-		err := c.BindJSON(&category)
-		if err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
-			return
-		}
-
-		if err := model.SaveData(&category); err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{
-			"id":   category.ID,
-			"name": category.Name,
-		})
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Category not found"})
+		return
 	}
+
+	v := model.CategoryValidator{CategoryModel: category}
+
+	if err := v.Bind(c); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+		return
+	}
+
+	if err := model.SaveData(&v.CategoryModel); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"id":   v.CategoryModel.ID,
+		"name": v.CategoryModel.Name,
+	})
 }
 
 func DestroyCategory(c *gin.Context) {

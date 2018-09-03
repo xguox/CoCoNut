@@ -3,8 +3,6 @@ package util
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	validator "gopkg.in/go-playground/validator.v8"
 )
 
@@ -35,7 +33,7 @@ func NewError(key string, err error) CommonError {
 	return res
 }
 
-func CommonBind(c *gin.Context, obj interface{}) error {
-	b := binding.Default(c.Request.Method, c.ContentType())
-	return c.ShouldBindWith(obj, b)
-}
+// func CommonBind(c *gin.Context, obj interface{}) error {
+// 	b := binding.Default(c.Request.Method, c.ContentType())
+// 	return c.ShouldBindWith(obj, b)
+// }

@@ -2,8 +2,9 @@ package model
 
 import (
 	"coconut/db"
-	"coconut/util"
 	"reflect"
+
+	"github.com/gin-gonic/gin/binding"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -32,12 +33,12 @@ type CategoryValidator struct {
 }
 
 func (self *CategoryValidator) Bind(c *gin.Context) error {
-	err := util.CommonBind(c, self)
-	// err := c.ShouldBindWith(self.Category, binding.Query)
+	// err := util.CommonBind(c, self)
+	b := binding.Default(c.Request.Method, c.ContentType())
+	err := c.ShouldBindWith(self, b)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -48,6 +49,6 @@ func CategoryNameUniq(
 ) bool {
 	var c Category
 	category := currentStructOrField.Interface().(Category)
-	db.PG.Where("name = ?", category.Name).First(&c)
+	db.PG.Where("name = ? AND id != ?", category.Name, category.ID).First(&c)
 	return c.Name == ""
 }
