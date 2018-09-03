@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20180901084528) do
     t.datetime "published_at"
     t.string "vendor"
     t.text "keywords"
-    t.decimal "price", precision: 8, scale: 2
+    t.decimal "price", precision: 8, scale: 2, default: "0.0"
     t.string "slug"
     t.integer "stock_qty", default: 0
     t.integer "status", default: 0
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20180901084528) do
   end
 
   create_table "variants", force: :cascade do |t|
-    t.decimal "price", precision: 8, scale: 2
+    t.decimal "price", precision: 8, scale: 2, default: "0.0"
     t.string "sku"
     t.integer "stock"
     t.integer "position"

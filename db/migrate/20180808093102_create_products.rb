@@ -6,7 +6,7 @@ class CreateProducts < ActiveRecord::Migration[5.1]
       t.datetime "published_at"
       t.string   "vendor"
       t.text     "keywords"
-      t.decimal  "price",        precision: 8, scale: 2
+      t.decimal  "price",        precision: 8, scale: 2, default: 0.0
       t.string   "slug"
       t.integer  "stock_qty",                            default: 0
       t.integer  "status",                               default: 0

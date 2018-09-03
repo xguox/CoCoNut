@@ -4,6 +4,7 @@ import (
 	"coconut/db"
 	"coconut/model"
 	. "coconut/serializer"
+	"coconut/util"
 
 	"net/http"
 	"time"
@@ -12,8 +13,19 @@ import (
 )
 
 func CreateProduct(c *gin.Context) {
-	_product := model.CreateProduct(c.PostForm("name"))
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Product created successfully!", "resourceId": _product.ID})
+	v := model.ProductValidator{}
+	if err := v.Bind(c); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+		return
+	}
+
+	if err := model.SaveData(&v.ProductModel); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		return
+	}
+	s := ProductSerializer{v.ProductModel}
+
+	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Product created successfully!", "data": s.Response()})
 }
 
 func FetchAllProducts(c *gin.Context) {
@@ -41,13 +53,18 @@ func FetchProduct(c *gin.Context) {
 
 func UpdateProduct(c *gin.Context) {
 	id := c.Params.ByName("id")
-	_product, err := model.GetProductById(id)
+	product, err := model.GetProductById(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
-		_product.Update(c.PostForm("name"))
-		s := ProductSerializer{_product}
+		v := model.ProductValidator{ProductModel: product}
+		if err := v.Bind(c); err != nil {
+			c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+			return
+		}
+		db.PG.Save(&v.ProductModel)
+		s := ProductSerializer{v.ProductModel}
 		c.JSON(http.StatusOK, s.Response())
 	}
 }
