@@ -8,6 +8,7 @@ import (
 
 func main() {
 	defer db.PG.Close()
+
 	router := drawRoutes()
 	router.Run(":9876")
 }

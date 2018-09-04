@@ -64,22 +64,22 @@ type ProductValidator struct {
 	ProductModel Product `json:"-"`
 }
 
-func (self *ProductValidator) Bind(c *gin.Context) error {
+func (s *ProductValidator) Bind(c *gin.Context) error {
 	b := binding.Default(c.Request.Method, c.ContentType())
-	err := c.ShouldBindWith(self, b)
+	err := c.ShouldBindWith(s, b)
 
-	self.ProductModel.Title = self.ProductTmp.Title
-	self.ProductModel.BodyHTML = self.ProductTmp.BodyHTML
-	self.ProductModel.PublishedAt = self.ProductTmp.PublishedAt
-	self.ProductModel.Vendor = self.ProductTmp.Vendor
-	self.ProductModel.Keywords = self.ProductTmp.Keywords
-	self.ProductModel.Price = self.ProductTmp.Price
-	self.ProductModel.Slug = self.ProductTmp.Slug
-	self.ProductModel.StockQty = self.ProductTmp.StockQty
-	self.ProductModel.Status = self.ProductTmp.Status
-	self.ProductModel.HotSale = self.ProductTmp.HotSale
-	self.ProductModel.NewArrival = self.ProductTmp.NewArrival
-	self.ProductModel.CategoryID = self.ProductTmp.CategoryID
+	s.ProductModel.Title = s.ProductTmp.Title
+	s.ProductModel.BodyHTML = s.ProductTmp.BodyHTML
+	s.ProductModel.PublishedAt = s.ProductTmp.PublishedAt
+	s.ProductModel.Vendor = s.ProductTmp.Vendor
+	s.ProductModel.Keywords = s.ProductTmp.Keywords
+	s.ProductModel.Price = s.ProductTmp.Price
+	s.ProductModel.Slug = s.ProductTmp.Slug
+	s.ProductModel.StockQty = s.ProductTmp.StockQty
+	s.ProductModel.Status = s.ProductTmp.Status
+	s.ProductModel.HotSale = s.ProductTmp.HotSale
+	s.ProductModel.NewArrival = s.ProductTmp.NewArrival
+	s.ProductModel.CategoryID = s.ProductTmp.CategoryID
 
 	return err
 }

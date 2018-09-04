@@ -1,12 +1,11 @@
 package model
 
-import (
-	"github.com/gin-gonic/gin/binding"
-	validator "gopkg.in/go-playground/validator.v8"
-)
+import "github.com/gin-gonic/gin/binding"
 
 func init() {
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("category_nameuniq", CategoryNameUniq)
-	}
+	binding.Validator = new(defaultValidator)
+}
+
+var modelTableNameMap = map[string]string{
+	"Category": "categories",
 }

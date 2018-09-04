@@ -2,18 +2,19 @@ package model
 
 import (
 	"coconut/db"
-	"reflect"
+	"fmt"
+
+	validator "gopkg.in/go-playground/validator.v9"
 
 	"github.com/gin-gonic/gin/binding"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	validator "gopkg.in/go-playground/validator.v8"
 )
 
 type Category struct {
 	gorm.Model
-	Name string `form:"name" json:"name" binding:"required,category_nameuniq"`
+	Name string `form:"name" json:"name" binding:"required,is-uniq"`
 	Slug string `form:"slug" json:"slug" binding:"required"`
 }
 
@@ -32,23 +33,24 @@ type CategoryValidator struct {
 	CategoryModel Category `json:"category"`
 }
 
-func (self *CategoryValidator) Bind(c *gin.Context) error {
-	// err := util.CommonBind(c, self)
+func (s *CategoryValidator) Bind(c *gin.Context) error {
+	// err := util.CommonBind(c, s)
 	b := binding.Default(c.Request.Method, c.ContentType())
-	err := c.ShouldBindWith(self, b)
+	err := c.ShouldBindWith(s, b)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// CategoryNameUniq 一大堆参数都抽象不起来啊 = 。 =
-func CategoryNameUniq(
-	v *validator.Validate, topStruct reflect.Value, currentStructOrField reflect.Value,
-	field reflect.Value, fieldType reflect.Type, fieldKind reflect.Kind, param string,
-) bool {
-	var c Category
-	category := currentStructOrField.Interface().(Category)
-	db.PG.Where("name = ? AND id != ?", category.Name, category.ID).First(&c)
-	return c.Name == ""
+func ValidateUniq(fl validator.FieldLevel) bool {
+	var result struct{ Count int }
+	currentField, _, _ := fl.GetStructFieldOK()
+	table := modelTableNameMap[currentField.Type().Name()] // table name
+	value := fl.Field().String()                           // value
+	column := fl.FieldName()                               // column name
+	sql := fmt.Sprintf("select count(*) from %s where %s='%s'", table, column, value)
+	db.PG.Raw(sql).Scan(&result)
+	dup := result.Count > 0
+	return !dup
 }
