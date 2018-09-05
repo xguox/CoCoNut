@@ -2,6 +2,7 @@ package main
 
 import (
 	. "coconut/controller"
+	"coconut/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,6 +10,13 @@ import (
 func drawRoutes() *gin.Engine {
 	router := gin.Default()
 	v1 := router.Group("/api/v1/")
+
+	{
+		v1.POST("login", UserLogin)
+	}
+
+	v1.Use(util.AuthMiddleware())
+
 	users := v1.Group("/users")
 	{
 		users.POST("", CreateUser)

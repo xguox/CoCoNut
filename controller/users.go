@@ -3,6 +3,7 @@ package controller
 import (
 	"coconut/model"
 	"coconut/util"
+	"coconut/serializer"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,10 +34,32 @@ func GetUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no user found"})
 	} else {
-		if err := user.CheckPassword(password); err != nil {
+		if user.CheckPassword(password) != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"message": "密码错误"})
 		} else {
 			c.JSON(http.StatusOK, gin.H{"email": user.Email})
 		}
 	}
+}
+
+func UserLogin(c *gin.Context) {
+	v := model.LoginValidator{}
+	if err := v.Bind(c); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+		return
+	}
+	user, err := model.FindUserByEmail(v.UserModel.Email)
+
+	if err != nil {
+		c.JSON(http.StatusForbidden, gin.H{"message": "Not Registered email or invalid password"})
+		return
+	}
+
+	if user.CheckPassword(v.UserTmp.Password) != nil {
+		c.JSON(http.StatusForbidden, gin.H{"message": "Invalid password"})
+		return
+	}
+	util.UpdateContextCurrentUser(c, user.ID)
+	serializer := serializer.UserSerializer{c}
+	c.JSON(http.StatusOK, gin.H{"user": serializer.Response()})
 }

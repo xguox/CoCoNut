@@ -18,7 +18,9 @@ realize start --run
 
 ##### TODO
 
-- [ ] USER
+- [x] CATEGORY
+- [x] PRODUCT
+- [x] USER & AUTH
 - [ ] TESTING
 - [ ] TAGGING
 - [ ] OPTIONS

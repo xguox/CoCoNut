@@ -43,12 +43,20 @@ func FindUserByName(username string) (User, error) {
 	return user, nil
 }
 
+func FindUserByEmail(email string) (User, error) {
+	var user User
+	if err := db.PG.Where("email = ?", email).First(&user).Error; err != nil {
+		return user, err
+	}
+	return user, nil
+}
+
 // UserValidator ...
 type UserValidator struct {
 	UserTmp struct {
 		Username string `json:"username" binding:"required"`
 		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required,min=6"`
+		Password string `json:"password" binding:"required,min=6,max=64"`
 	} `json:"user"`
 	UserModel User
 }
@@ -62,5 +70,24 @@ func (uv *UserValidator) Bind(c *gin.Context) error {
 	uv.UserModel.Username = uv.UserTmp.Username
 	uv.UserModel.Email = uv.UserTmp.Email
 	uv.UserModel.setPassword(uv.UserTmp.Password)
+	return nil
+}
+
+// LoginValidator ...
+type LoginValidator struct {
+	UserTmp struct {
+		Email    string `form:"email" json:"email" binding:"required,email"`
+		Password string `form:"password" json:"password" binding:"required,min=6,max=64"`
+	} `json:"user"`
+	UserModel User `json:"-"`
+}
+
+func (lv *LoginValidator) Bind(c *gin.Context) error {
+	b := binding.Default(c.Request.Method, c.ContentType())
+	err := c.ShouldBindWith(lv, b)
+	if err != nil {
+		return err
+	}
+	lv.UserModel.Email = lv.UserTmp.Email
 	return nil
 }
