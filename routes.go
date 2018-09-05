@@ -9,6 +9,11 @@ import (
 func drawRoutes() *gin.Engine {
 	router := gin.Default()
 	v1 := router.Group("/api/v1/")
+	users := v1.Group("/users")
+	{
+		users.POST("", CreateUser)
+		users.GET("/show", GetUser)
+	}
 	products := v1.Group("/products")
 	{
 		products.POST("", CreateProduct)

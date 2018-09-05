@@ -33,7 +33,6 @@ type CategoryValidator struct {
 }
 
 func (s *CategoryValidator) Bind(c *gin.Context) error {
-	// err := util.CommonBind(c, s)
 	b := binding.Default(c.Request.Method, c.ContentType())
 	err := c.ShouldBindWith(s, b)
 	if err != nil {
