@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/stretchr/testify/assert"
@@ -44,11 +45,27 @@ func categoriesMocker(n int) []Category {
 	return cArr
 }
 
-func TestGetCategoryByID(t *testing.T) {
-	categoriesMocker(2)
+func TestCategories(t *testing.T) {
 	asserts := assert.New(t)
+	var category Category
+	var categories []Category
+	var oldCategoriesCount, currentCategoriesCount int
+	categoriesMocker(6)
+
 	category, err := GetCategoryByID("1")
 	asserts.NoError(err, "category should exist")
 	asserts.Equal("name-1", category.Name, "GetCategoryByID() should return category with the right name")
 
+	_, err = GetCategoryByID("10000")
+	asserts.Error(err, "category not found should return err")
+
+	testDB.Model(&Category{}).Count(&oldCategoriesCount)
+	categoriesMocker(3)
+	categories = GetCategories()
+	currentCategoriesCount = oldCategoriesCount + 3
+	asserts.Equal(currentCategoriesCount, len(categories), "GetCategories() should return all categories where deleted_at is null without pagination")
+
+	category.SetDeletedAt(time.Now())
+	categories = GetCategories()
+	asserts.Equal(currentCategoriesCount-1, len(categories), "category SetDeletedAt() should remove from GetCategories()")
 }

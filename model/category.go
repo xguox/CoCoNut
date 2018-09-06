@@ -3,6 +3,7 @@ package model
 import (
 	"coconut/db"
 	"fmt"
+	"time"
 
 	validator "gopkg.in/go-playground/validator.v9"
 
@@ -24,6 +25,16 @@ func GetCategoryByID(id string) (Category, error) {
 		return category, err
 	}
 	return category, nil
+}
+
+func GetCategories() []Category {
+	var categories []Category
+	db.GetDB().Find(&categories)
+	return categories
+}
+
+func (c *Category) SetDeletedAt(t time.Time) {
+	db.GetDB().Model(c).Update("DeletedAt", time.Now())
 }
 
 // CATEGORY VALIDATOR

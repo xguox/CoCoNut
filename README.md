@@ -21,7 +21,6 @@ realize start --run
 - [x] CATEGORY
 - [x] PRODUCT
 - [x] USER & AUTH
-- [ ] TESTING
 - [ ] TAGGING
 - [ ] OPTIONS
 - [ ] VARIANT
@@ -33,3 +32,4 @@ realize start --run
 - [ ] PICTURES
 - [ ] WISH_LIST
 - [ ] GROUPON, COUPON
+- [ ] TESTING

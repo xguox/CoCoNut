@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"coconut/db"
 	"coconut/model"
 
 	"coconut/util"
@@ -31,9 +30,7 @@ func CreateCategory(c *gin.Context) {
 }
 
 func FetchCategories(c *gin.Context) {
-	var categories []model.Category
-	db.GetDB().Find(&categories)
-
+	categories := model.GetCategories()
 	if len(categories) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no categories found"})
 		return
@@ -75,7 +72,7 @@ func DestroyCategory(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "category not found"})
 	} else {
-		db.GetDB().Model(&category).Update("DeletedAt", time.Now())
+		category.SetDeletedAt(time.Now())
 		c.JSON(http.StatusOK, gin.H{})
 	}
 }

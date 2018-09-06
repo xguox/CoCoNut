@@ -29,9 +29,9 @@ type Product struct {
 }
 
 func GetProducts() []Product {
-	var topics []Product
-	db.GetDB().Find(&topics)
-	return topics
+	var categories []Product
+	db.GetDB().Find(&categories)
+	return categories
 }
 
 func GetProductByID(id string) (Product, error) {
