@@ -70,7 +70,7 @@ func UpdateProduct(c *gin.Context) {
 			return
 		}
 
-		db.PG.Save(&v.ProductModel)
+		db.GetDB().Save(&v.ProductModel)
 		s := ProductSerializer{v.ProductModel}
 		c.JSON(http.StatusOK, s.Response())
 	}
@@ -83,7 +83,7 @@ func DestroyProduct(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
-		db.PG.Model(&_product).Update("DeletedAt", time.Now())
+		db.GetDB().Model(&_product).Update("DeletedAt", time.Now())
 		c.JSON(http.StatusOK, gin.H{})
 	}
 }

@@ -4,3 +4,10 @@ development:
   pool: 5
   port: 5432
   host: localhost
+
+test:
+  adapter: postgresql
+  database: coconut_test
+  pool: 5
+  port: 5432
+  host: localhost

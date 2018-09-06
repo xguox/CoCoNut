@@ -60,7 +60,7 @@ func GenerateToken(id uint) string {
 func UpdateContextCurrentUser(c *gin.Context, currentUserID uint) {
 	var currentUser model.User
 	if currentUserID != 0 {
-		db.PG.First(&currentUser, currentUserID)
+		db.GetDB().First(&currentUser, currentUserID)
 	}
 	c.Set("current_user_id", currentUserID)
 	c.Set("current_user", currentUser)

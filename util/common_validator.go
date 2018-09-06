@@ -16,10 +16,3 @@ func NewValidatorError(err error) CommonError {
 	}
 	return res
 }
-
-// func NewError(key string, err error) CommonError {
-// 	res := CommonError{}
-// 	res.Errors = make(map[string]interface{})
-// 	res.Errors[key] = err.Error()
-// 	return res
-// }

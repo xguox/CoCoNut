@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	defer db.PG.Close()
+	defer db.GetDB().Close()
 
 	router := drawRoutes()
 	router.Run(":9876")

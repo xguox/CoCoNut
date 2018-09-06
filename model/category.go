@@ -20,7 +20,7 @@ type Category struct {
 
 func GetCategoryByID(id string) (Category, error) {
 	var category Category
-	if err := db.PG.Where("id = ?", id).First(&category).Error; err != nil {
+	if err := db.GetDB().Where("id = ?", id).First(&category).Error; err != nil {
 		return category, err
 	}
 	return category, nil
@@ -48,7 +48,7 @@ func ValidateUniq(fl validator.FieldLevel) bool {
 	value := fl.Field().String()                           // value
 	column := fl.FieldName()                               // column name
 	sql := fmt.Sprintf("select count(*) from %s where %s='%s'", table, column, value)
-	db.PG.Raw(sql).Scan(&result)
+	db.GetDB().Raw(sql).Scan(&result)
 	dup := result.Count > 0
 	return !dup
 }

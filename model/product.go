@@ -30,13 +30,13 @@ type Product struct {
 
 func GetProducts() []Product {
 	var topics []Product
-	db.PG.Find(&topics)
+	db.GetDB().Find(&topics)
 	return topics
 }
 
 func GetProductByID(id string) (Product, error) {
 	var tp Product
-	if err := db.PG.Where("id = ?", id).First(&tp).Error; err != nil {
+	if err := db.GetDB().Where("id = ?", id).First(&tp).Error; err != nil {
 		return tp, err
 	}
 	return tp, nil

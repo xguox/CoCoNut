@@ -37,7 +37,7 @@ func (u *User) CheckPassword(password string) error {
 
 func FindUserByName(username string) (User, error) {
 	var user User
-	if err := db.PG.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := db.GetDB().Where("username = ?", username).First(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil
@@ -45,7 +45,7 @@ func FindUserByName(username string) (User, error) {
 
 func FindUserByEmail(email string) (User, error) {
 	var user User
-	if err := db.PG.Where("email = ?", email).First(&user).Error; err != nil {
+	if err := db.GetDB().Where("email = ?", email).First(&user).Error; err != nil {
 		return user, err
 	}
 	return user, nil

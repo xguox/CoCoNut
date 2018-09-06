@@ -32,7 +32,7 @@ func CreateCategory(c *gin.Context) {
 
 func FetchCategories(c *gin.Context) {
 	var categories []model.Category
-	db.PG.Find(&categories)
+	db.GetDB().Find(&categories)
 
 	if len(categories) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no categories found"})
@@ -75,7 +75,7 @@ func DestroyCategory(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "category not found"})
 	} else {
-		db.PG.Model(&category).Update("DeletedAt", time.Now())
+		db.GetDB().Model(&category).Update("DeletedAt", time.Now())
 		c.JSON(http.StatusOK, gin.H{})
 	}
 }

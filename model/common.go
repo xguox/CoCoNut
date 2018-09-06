@@ -5,6 +5,6 @@ import (
 )
 
 func SaveData(data interface{}) error {
-	err := db.PG.Save(data).Error
+	err := db.GetDB().Save(data).Error
 	return err
 }

@@ -23,7 +23,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/testify v1.2.2 // indirect
+	github.com/stretchr/testify v1.2.2
 	github.com/ugorji/go v1.1.1 // indirect
 	golang.org/x/crypto v0.0.0-20180904163835-0709b304e793
 	golang.org/x/net v0.0.0-20180826012351-8a410e7b638d // indirect

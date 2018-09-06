@@ -22,6 +22,7 @@ func drawRoutes() *gin.Engine {
 		users.POST("", CreateUser)
 		users.GET("/show", GetUser)
 	}
+
 	products := v1.Group("/products")
 	{
 		products.POST("", CreateProduct)
