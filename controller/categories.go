@@ -44,7 +44,7 @@ func FetchCategories(c *gin.Context) {
 
 func UpdateCategory(c *gin.Context) {
 	id := c.Params.ByName("id")
-	category, err := model.GetCategoryById(id)
+	category, err := model.GetCategoryByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "Category not found"})
@@ -71,7 +71,7 @@ func UpdateCategory(c *gin.Context) {
 
 func DestroyCategory(c *gin.Context) {
 	id := c.Params.ByName("id")
-	category, err := model.GetCategoryById(id)
+	category, err := model.GetCategoryByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "category not found"})
 	} else {

@@ -22,11 +22,10 @@ type Product struct {
 	StockQty    int        `json:"stock_qty" sql:"default:0"`
 	Status      int        `json:"status" sql:"default:0"`
 	HotSale     bool       `json:"hot_sale" sql:"default:false"`
-	NewArrival  bool       `json:"new_arrival"  sql:"default:true"` // 不需要 default:true 否则会有 bug
+	NewArrival  bool       `json:"new_arrival"` // 不需要 default:true 否则会有 bug
 	CategoryID  int        `json:"category_id"`
 
 	Cover *string
-	// Category    Category
 }
 
 func GetProducts() []Product {
@@ -35,13 +34,12 @@ func GetProducts() []Product {
 	return topics
 }
 
-func GetProductById(id string) (Product, error) {
+func GetProductByID(id string) (Product, error) {
 	var tp Product
 	if err := db.PG.Where("id = ?", id).First(&tp).Error; err != nil {
 		return tp, err
-	} else {
-		return tp, nil
 	}
+	return tp, nil
 }
 
 // PRODUCT VALIDATOR
@@ -67,7 +65,9 @@ type ProductValidator struct {
 func (s *ProductValidator) Bind(c *gin.Context) error {
 	b := binding.Default(c.Request.Method, c.ContentType())
 	err := c.ShouldBindWith(s, b)
-
+	if err != nil {
+		return err
+	}
 	s.ProductModel.Title = s.ProductTmp.Title
 	s.ProductModel.BodyHTML = s.ProductTmp.BodyHTML
 	s.ProductModel.PublishedAt = s.ProductTmp.PublishedAt
@@ -80,6 +80,5 @@ func (s *ProductValidator) Bind(c *gin.Context) error {
 	s.ProductModel.HotSale = s.ProductTmp.HotSale
 	s.ProductModel.NewArrival = s.ProductTmp.NewArrival
 	s.ProductModel.CategoryID = s.ProductTmp.CategoryID
-
-	return err
+	return nil
 }

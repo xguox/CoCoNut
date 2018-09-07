@@ -5,6 +5,7 @@ import (
 	"coconut/model"
 	. "coconut/serializer"
 	"coconut/util"
+	"fmt"
 
 	"net/http"
 	"time"
@@ -18,14 +19,16 @@ func CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
 		return
 	}
-
+	if checkCategoryNotFound(c, v.ProductTmp.CategoryID) {
+		return
+	}
 	if err := model.SaveData(&v.ProductModel); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
 	s := ProductSerializer{v.ProductModel}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "message": "Product created successfully!", "data": s.Response()})
+	c.JSON(http.StatusOK, gin.H{"message": "Product created successfully!", "data": s.Response()})
 }
 
 func FetchAllProducts(c *gin.Context) {
@@ -36,12 +39,12 @@ func FetchAllProducts(c *gin.Context) {
 	}
 	s := ProductsSerializer{products}
 
-	c.JSON(http.StatusOK, gin.H{"status": http.StatusOK, "data": s.Response()})
+	c.JSON(http.StatusOK, gin.H{"data": s.Response()})
 }
 
 func FetchProduct(c *gin.Context) {
 	id := c.Params.ByName("id")
-	_product, err := model.GetProductById(id)
+	_product, err := model.GetProductByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
@@ -53,7 +56,7 @@ func FetchProduct(c *gin.Context) {
 
 func UpdateProduct(c *gin.Context) {
 	id := c.Params.ByName("id")
-	product, err := model.GetProductById(id)
+	product, err := model.GetProductByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
@@ -63,6 +66,10 @@ func UpdateProduct(c *gin.Context) {
 			c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
 			return
 		}
+		if checkCategoryNotFound(c, v.ProductTmp.CategoryID) {
+			return
+		}
+
 		db.PG.Save(&v.ProductModel)
 		s := ProductSerializer{v.ProductModel}
 		c.JSON(http.StatusOK, s.Response())
@@ -71,7 +78,7 @@ func UpdateProduct(c *gin.Context) {
 
 func DestroyProduct(c *gin.Context) {
 	id := c.Params.ByName("id")
-	_product, err := model.GetProductById(id)
+	_product, err := model.GetProductByID(id)
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
@@ -79,4 +86,13 @@ func DestroyProduct(c *gin.Context) {
 		db.PG.Model(&_product).Update("DeletedAt", time.Now())
 		c.JSON(http.StatusOK, gin.H{})
 	}
+}
+
+func checkCategoryNotFound(c *gin.Context, id int) bool {
+	_, err := model.GetCategoryByID(fmt.Sprintf("%d", id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "category not found"})
+		return true
+	}
+	return false
 }

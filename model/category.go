@@ -18,13 +18,12 @@ type Category struct {
 	Slug string `form:"slug" json:"slug" binding:"required"`
 }
 
-func GetCategoryById(id string) (Category, error) {
+func GetCategoryByID(id string) (Category, error) {
 	var category Category
 	if err := db.PG.Where("id = ?", id).First(&category).Error; err != nil {
 		return category, err
-	} else {
-		return category, nil
 	}
+	return category, nil
 }
 
 // CATEGORY VALIDATOR
