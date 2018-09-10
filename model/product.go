@@ -18,7 +18,7 @@ type Product struct {
 	Vendor      *string    `json:"vendor"`
 	Keywords    *string    `json:"keywords"`
 	Price       float32    `json:"price" sql:"default:0.0"`
-	Slug        *string    `json:"slug"`
+	Slug        string     `json:"slug"`
 	StockQty    int        `json:"stock_qty" sql:"default:0"`
 	Status      int        `json:"status" sql:"default:0"`
 	HotSale     bool       `json:"hot_sale" sql:"default:false"`
@@ -52,7 +52,7 @@ type ProductValidator struct {
 		Vendor      *string    `form:"vendor" json:"vendor"`
 		Keywords    *string    `form:"keywords" json:"keywords"`
 		Price       float32    `form:"price" json:"price"`
-		Slug        *string    `form:"slug" json:"slug" binding:"required"`
+		Slug        string     `form:"slug" json:"slug" binding:"required"`
 		StockQty    int        `form:"stock_qty" json:"stock_qty"`
 		Status      int        `form:"status" json:"status"`
 		HotSale     bool       `form:"hot_sale" json:"hot_sale"`

@@ -21,7 +21,7 @@ type ProductResponse struct {
 	Vendor      *string    `json:"vendor"`
 	Keywords    *string    `json:"keywords"`
 	Price       float32    `json:"price"`
-	Slug        *string    `json:"slug"`
+	Slug        string     `json:"slug"`
 	StockQty    int        `json:"stock_qty"`
 	Status      int        `json:"status"`
 	HotSale     bool       `json:"hot_sale"`

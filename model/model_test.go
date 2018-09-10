@@ -69,3 +69,48 @@ func TestCategories(t *testing.T) {
 	categories = GetCategories()
 	asserts.Equal(currentCategoriesCount-1, len(categories), "category SetDeletedAt() should remove from GetCategories()")
 }
+
+func newTestProduct(title, slug string) Product {
+	return Product{
+		Title: title,
+		Slug:  slug,
+	}
+}
+
+func productsMocker(n int) []Product {
+	var offset int
+	testDB.Model(&Product{}).Count(&offset)
+	var pArr []Product
+	for i := offset + 1; i <= offset+n; i++ {
+		product := newTestProduct(fmt.Sprintf("title-%v", i), fmt.Sprintf("slug-%v", i))
+		testDB.Create(&product)
+		pArr = append(pArr, product)
+	}
+	return pArr
+}
+
+func TestProducts(t *testing.T) {
+	asserts := assert.New(t)
+	var product Product
+	var products []Product
+	var oldProductsCount, currentProductsCount int
+	productsMocker(1)
+	productsMocker(6)
+
+	product, err := GetProductByID("1")
+	asserts.NoError(err, "product should exist")
+	asserts.Equal("title-1", product.Title, "GetProductByID() should return product with the right title")
+
+	_, err = GetProductByID("5000")
+	asserts.Error(err, "product not found should return err")
+
+	testDB.Model(&Product{}).Count(&oldProductsCount)
+	productsMocker(3)
+	products = GetProducts()
+	currentProductsCount = oldProductsCount + 3
+	asserts.Equal(currentProductsCount, len(products), "GetProducts() should return all Products where deleted_at is null without pagination")
+
+	// product.SetDeletedAt(time.Now())
+	// products = GetProducts()
+	// asserts.Equal(currentProductsCount-1, len(products), "product SetDeletedAt() should remove from GetProducts()")
+}
