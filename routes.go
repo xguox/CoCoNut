@@ -11,19 +11,29 @@ func drawRoutes() *gin.Engine {
 	router := gin.Default()
 	v1 := router.Group("/api/v1/")
 
+	shop := v1.Group("/shop")
+	shopRoutesRegister(shop)
+
+	admin := v1.Group("/admin")
+	adminRoutesRegister(admin)
+
+	return router
+}
+
+func adminRoutesRegister(admin *gin.RouterGroup) {
+	admin.Use(util.AuthMiddleware())
+
 	{
-		v1.POST("login", UserLogin)
+		admin.POST("login", UserLogin)
 	}
 
-	v1.Use(util.AuthMiddleware())
-
-	users := v1.Group("/users")
+	users := admin.Group("/users")
 	{
 		users.POST("", CreateUser)
 		users.GET("/show", GetUser)
 	}
 
-	products := v1.Group("/products")
+	products := admin.Group("/products")
 	{
 		products.POST("", CreateProduct)
 		products.GET("", FetchAllProducts)
@@ -32,12 +42,15 @@ func drawRoutes() *gin.Engine {
 		products.DELETE("/:id", DestroyProduct)
 	}
 
-	categories := v1.Group("/categories")
+	categories := admin.Group("/categories")
 	{
 		categories.POST("", CreateCategory)
 		categories.GET("", FetchCategories)
 		categories.PUT("/:id", UpdateCategory)
 		categories.DELETE("/:id", DestroyCategory)
 	}
-	return router
+}
+
+func shopRoutesRegister(shop *gin.RouterGroup) {
+
 }
