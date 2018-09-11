@@ -26,6 +26,7 @@ func CreateProduct(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 		return
 	}
+	v.ProductModel.GetCategory()
 	s := ProductSerializer{v.ProductModel}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Product created successfully!", "data": s.Response()})
@@ -45,10 +46,10 @@ func FetchAllProducts(c *gin.Context) {
 func FetchProduct(c *gin.Context) {
 	id := c.Params.ByName("id")
 	_product, err := model.GetProductByID(id)
-
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
+		_product.GetCategory()
 		s := ProductSerializer{_product}
 		c.JSON(http.StatusOK, s.Response())
 	}

@@ -15,8 +15,8 @@ import (
 
 type Category struct {
 	gorm.Model
-	Name string `form:"name" json:"name" binding:"required,is-uniq"`
-	Slug string `form:"slug" json:"slug" binding:"required"`
+	Name string
+	Slug string
 }
 
 func GetCategoryByID(id string) (Category, error) {
@@ -40,7 +40,11 @@ func (c *Category) SetDeletedAt(t time.Time) {
 // CATEGORY VALIDATOR
 
 type CategoryValidator struct {
-	CategoryModel Category `json:"category"`
+	CategoryTmp struct {
+		Name string `form:"name" json:"name" binding:"required,is-uniq"`
+		Slug string `form:"slug" json:"slug" binding:"required"`
+	}
+	CategoryModel Category `json:"-"`
 }
 
 func (s *CategoryValidator) Bind(c *gin.Context) error {
@@ -49,6 +53,9 @@ func (s *CategoryValidator) Bind(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
+
+	s.CategoryModel.Name = s.CategoryTmp.Name
+	s.CategoryModel.Slug = s.CategoryTmp.Slug
 	return nil
 }
 

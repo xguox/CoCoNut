@@ -24,8 +24,8 @@ type Product struct {
 	HotSale     bool       `json:"hot_sale" sql:"default:false"`
 	NewArrival  bool       `json:"new_arrival"` // 不需要 default:true 否则会有 bug
 	CategoryID  int        `json:"category_id"`
-
-	Cover *string
+	Category    Category
+	Cover       *string
 }
 
 func GetProducts() []Product {
@@ -35,11 +35,19 @@ func GetProducts() []Product {
 }
 
 func GetProductByID(id string) (Product, error) {
-	var tp Product
-	if err := db.GetDB().Where("id = ?", id).First(&tp).Error; err != nil {
-		return tp, err
-	}
-	return tp, nil
+	var p Product
+	tran := db.GetDB().Begin()
+	tran.Where("id = ?", id).First(&p)
+	tran.Model(&p).Related(&p.Category, "Category")
+	err := tran.Commit().Error
+	return p, err
+}
+
+func (s *Product) GetCategory() error {
+	tran := db.GetDB().Begin()
+	tran.Model(s).Related(&s.Category, "Category")
+	err := tran.Commit().Error
+	return err
 }
 
 // PRODUCT VALIDATOR
