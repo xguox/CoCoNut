@@ -28,6 +28,7 @@ type ProductResponse struct {
 	NewArrival   bool       `json:"new_arrival"`
 	CategoryID   uint       `json:"category_id"`
 	CategoryName string     `json:"category_name"`
+	Tags         []string   `json:"tags"`
 	CreatedAt    time.Time  `json:"createdAt"`
 	UpdatedAt    time.Time  `json:"updatedAt"`
 }
@@ -51,6 +52,10 @@ func (s *ProductSerializer) Response() ProductResponse {
 		CreatedAt:    s.CreatedAt,
 		UpdatedAt:    s.UpdatedAt,
 	}
+	response.Tags = make([]string, 0)
+	for _, tag := range s.Tags {
+		response.Tags = append(response.Tags, tag.Name)
+	}
 	return response
 }
 
@@ -58,6 +63,7 @@ func (s *ProductsSerializer) Response() []ProductResponse {
 	response := []ProductResponse{}
 	for _, product := range s.Products {
 		product.GetCategory()
+		product.GetTags()
 		serializer := ProductSerializer{product}
 		response = append(response, serializer.Response())
 	}

@@ -24,6 +24,8 @@ type Product struct {
 	HotSale     bool       `json:"hot_sale" sql:"default:false"`
 	NewArrival  bool       `json:"new_arrival"` // 不需要 default:true 否则会有 bug
 	CategoryID  int        `json:"category_id"`
+	Tags        []Tag      `gorm:"many2many:taggings;"`
+	Taggings    []Tagging
 	Category    Category
 	Cover       *string
 }
@@ -39,6 +41,7 @@ func GetProductByID(id string) (Product, error) {
 	tran := db.GetDB().Begin()
 	tran.Where("id = ?", id).First(&p)
 	tran.Model(&p).Related(&p.Category, "Category")
+	tran.Model(p).Related(&p.Tags, "Tags")
 	err := tran.Commit().Error
 	return p, err
 }
@@ -48,6 +51,32 @@ func (s *Product) GetCategory() error {
 	tran.Model(s).Related(&s.Category, "Category")
 	err := tran.Commit().Error
 	return err
+}
+
+func (s *Product) GetTags() error {
+	tran := db.GetDB().Begin()
+	tran.Model(s).Related(&s.Tags, "Tags")
+	err := tran.Commit().Error
+	return err
+}
+
+func (s *Product) SetTag(tagName string) error {
+	db := db.GetDB()
+	var _t Tag
+	var tagging Tagging
+	db.FirstOrCreate(&_t, Tag{Name: tagName})
+
+	// pq: null value in column "created_at" violates not-null constraint
+	// db.Model(&s).Association("Tag").Append(_t)
+	db.Where(Tagging{TagID: _t.ID, ProductID: s.ID}).Attrs(Tagging{CreatedAt: time.Now(), UpdatedAt: time.Now()}).FirstOrCreate(&tagging)
+	return nil
+}
+
+func (s *Product) RemoveTag(tagName string) {
+	db := db.GetDB()
+	var _t Tag
+	db.Where("name = ?", tagName).First(&_t)
+	db.Model(&s).Association("Tags").Delete(_t)
 }
 
 // PRODUCT VALIDATOR

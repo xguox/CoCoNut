@@ -3,14 +3,18 @@ package model
 import "time"
 
 type Tag struct {
-	ID            int
+	ID            uint
 	Name          string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	TaggingsCount uint
+	Products      []Product `gorm:"many2many:taggings;"`
 }
 
 type Tagging struct {
-	Tag     Tag
-	Product Product
+	ID        uint
+	TagID     uint
+	ProductID uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

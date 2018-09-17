@@ -49,7 +49,6 @@ func FetchProduct(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
-		_product.GetCategory()
 		s := ProductSerializer{_product}
 		c.JSON(http.StatusOK, s.Response())
 	}
@@ -85,6 +84,28 @@ func DestroyProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
 		db.GetDB().Model(&_product).Update("DeletedAt", time.Now())
+		c.JSON(http.StatusOK, gin.H{})
+	}
+}
+
+func TaggingProduct(c *gin.Context) {
+	var reqJSON struct {
+		Name   string
+		Delete bool
+	}
+	id := c.Params.ByName("id")
+	_product, err := model.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+	} else {
+		c.BindJSON(&reqJSON)
+
+		if reqJSON.Delete {
+			_product.RemoveTag(reqJSON.Name)
+		} else {
+			_product.SetTag(reqJSON.Name)
+		}
+
 		c.JSON(http.StatusOK, gin.H{})
 	}
 }

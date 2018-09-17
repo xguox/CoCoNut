@@ -40,6 +40,7 @@ func adminRoutesRegister(admin *gin.RouterGroup) {
 		products.GET("/:id", FetchProduct)
 		products.PUT("/:id", UpdateProduct)
 		products.DELETE("/:id", DestroyProduct)
+		products.POST("/:id/tagging", TaggingProduct)
 	}
 
 	categories := admin.Group("/categories")

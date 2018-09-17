@@ -21,7 +21,7 @@ realize start --run
 - [x] CATEGORY
 - [x] PRODUCT
 - [x] USER & AUTH
-- [ ] TAGGING
+- [x] TAGGING
 - [ ] OPTIONS
 - [ ] VARIANT
 - [ ] CUSTOMER
