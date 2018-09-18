@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180905133152) do
+ActiveRecord::Schema.define(version: 20180918135859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(version: 20180905133152) do
     t.index ["ancestry_depth"], name: "index_categories_on_ancestry_depth"
     t.index ["name"], name: "index_categories_on_name"
     t.index ["slug"], name: "index_categories_on_slug"
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.string "name"
+    t.integer "product_id"
+    t.integer "position"
+    t.text "values"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_options_on_product_id"
   end
 
   create_table "products", force: :cascade do |t|
