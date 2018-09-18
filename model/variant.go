@@ -3,10 +3,10 @@ package model
 type Variant struct {
 	Price    float32
 	Sku      string
-	Stock    int `json:"stock"`
-	Position int `json:"position"`
+	Stock    int
+	Position int
 	Product  Product
-	Option1  *string `json:"option1"`
-	Option2  *string `json:"option2"`
-	Option3  *string `json:"option3"`
+	Option1  *string
+	Option2  *string
+	Option3  *string
 }

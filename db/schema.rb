@@ -96,9 +96,12 @@ ActiveRecord::Schema.define(version: 20180918135859) do
     t.string "option1"
     t.string "option2"
     t.string "option3"
+    t.boolean "is_default", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
+    t.index ["product_id"], name: "index_variants_on_product_id"
+    t.index ["sku"], name: "index_variants_on_sku"
   end
 
 end
