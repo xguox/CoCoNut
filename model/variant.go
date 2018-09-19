@@ -1,12 +1,19 @@
 package model
 
+import (
+	"github.com/jinzhu/gorm"
+)
+
 type Variant struct {
-	Price    float32
-	Sku      string
-	Stock    int
-	Position int
-	Product  Product
-	Option1  *string
-	Option2  *string
-	Option3  *string
+	gorm.Model
+	Price     float32
+	Sku       string
+	Stock     int
+	Position  int
+	ProductID uint
+	Product   Product
+	IsDefault bool
+	Option1   *string
+	Option2   *string
+	Option3   *string
 }

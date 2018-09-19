@@ -28,6 +28,7 @@ type Product struct {
 	Taggings    []Tagging
 	Category    Category
 	Cover       *string
+	Variants    []Variant
 }
 
 func GetProducts() []Product {
@@ -46,21 +47,21 @@ func GetProductByID(id string) (Product, error) {
 	return p, err
 }
 
-func (s *Product) GetCategory() error {
+func (p *Product) GetCategory() error {
 	tran := db.GetDB().Begin()
-	tran.Model(s).Related(&s.Category, "Category")
+	tran.Model(p).Related(&p.Category, "Category")
 	err := tran.Commit().Error
 	return err
 }
 
-func (s *Product) GetTags() error {
+func (p *Product) GetTags() error {
 	tran := db.GetDB().Begin()
-	tran.Model(s).Related(&s.Tags, "Tags")
+	tran.Model(p).Related(&p.Tags, "Tags")
 	err := tran.Commit().Error
 	return err
 }
 
-func (s *Product) SetTag(tagName string) error {
+func (p *Product) SetTag(tagName string) error {
 	db := db.GetDB()
 	var _t Tag
 	var tagging Tagging
@@ -68,15 +69,25 @@ func (s *Product) SetTag(tagName string) error {
 
 	// pq: null value in column "created_at" violates not-null constraint
 	// db.Model(&s).Association("Tag").Append(_t)
-	db.Where(Tagging{TagID: _t.ID, ProductID: s.ID}).Attrs(Tagging{CreatedAt: time.Now(), UpdatedAt: time.Now()}).FirstOrCreate(&tagging)
+	db.Where(Tagging{TagID: _t.ID, ProductID: p.ID}).Attrs(Tagging{CreatedAt: time.Now(), UpdatedAt: time.Now()}).FirstOrCreate(&tagging)
 	return nil
 }
 
-func (s *Product) RemoveTag(tagName string) {
+func (p *Product) RemoveTag(tagName string) {
 	db := db.GetDB()
 	var _t Tag
 	db.Where("name = ?", tagName).First(&_t)
-	db.Model(&s).Association("Tags").Delete(_t)
+	db.Model(&p).Association("Tags").Delete(_t)
+}
+
+// AfterCreate 默认创建一个没有任何 option 的 Variant
+func (p *Product) AfterCreate(tx *gorm.DB) (err error) {
+	var variant Variant
+	variant.Price = p.Price
+	variant.Stock = 1
+	variant.IsDefault = true
+	tx.Model(p).Association("Variants").Append(variant)
+	return
 }
 
 // PRODUCT VALIDATOR
@@ -99,23 +110,23 @@ type ProductValidator struct {
 	ProductModel Product `json:"-"`
 }
 
-func (s *ProductValidator) Bind(c *gin.Context) error {
+func (pv *ProductValidator) Bind(c *gin.Context) error {
 	b := binding.Default(c.Request.Method, c.ContentType())
-	err := c.ShouldBindWith(s, b)
+	err := c.ShouldBindWith(pv, b)
 	if err != nil {
 		return err
 	}
-	s.ProductModel.Title = s.ProductTmp.Title
-	s.ProductModel.BodyHTML = s.ProductTmp.BodyHTML
-	s.ProductModel.PublishedAt = s.ProductTmp.PublishedAt
-	s.ProductModel.Vendor = s.ProductTmp.Vendor
-	s.ProductModel.Keywords = s.ProductTmp.Keywords
-	s.ProductModel.Price = s.ProductTmp.Price
-	s.ProductModel.Slug = s.ProductTmp.Slug
-	s.ProductModel.StockQty = s.ProductTmp.StockQty
-	s.ProductModel.Status = s.ProductTmp.Status
-	s.ProductModel.HotSale = s.ProductTmp.HotSale
-	s.ProductModel.NewArrival = s.ProductTmp.NewArrival
-	s.ProductModel.CategoryID = s.ProductTmp.CategoryID
+	pv.ProductModel.Title = pv.ProductTmp.Title
+	pv.ProductModel.BodyHTML = pv.ProductTmp.BodyHTML
+	pv.ProductModel.PublishedAt = pv.ProductTmp.PublishedAt
+	pv.ProductModel.Vendor = pv.ProductTmp.Vendor
+	pv.ProductModel.Keywords = pv.ProductTmp.Keywords
+	pv.ProductModel.Price = pv.ProductTmp.Price
+	pv.ProductModel.Slug = pv.ProductTmp.Slug
+	pv.ProductModel.StockQty = pv.ProductTmp.StockQty
+	pv.ProductModel.Status = pv.ProductTmp.Status
+	pv.ProductModel.HotSale = pv.ProductTmp.HotSale
+	pv.ProductModel.NewArrival = pv.ProductTmp.NewArrival
+	pv.ProductModel.CategoryID = pv.ProductTmp.CategoryID
 	return nil
 }
