@@ -2,6 +2,8 @@ package model
 
 import (
 	"coconut/db"
+	"fmt"
+	"reflect"
 	"time"
 
 	validator "gopkg.in/go-playground/validator.v9"
@@ -46,6 +48,10 @@ type CategoryValidator struct {
 	CategoryModel Category `json:"-"`
 }
 
+func (c *CategoryValidator) TableName() string {
+	return "categories"
+}
+
 func (s *CategoryValidator) Bind(c *gin.Context) error {
 	b := binding.Default(c.Request.Method, c.ContentType())
 	err := c.ShouldBindWith(s, b)
@@ -59,15 +65,13 @@ func (s *CategoryValidator) Bind(c *gin.Context) error {
 }
 
 func ValidateUniq(fl validator.FieldLevel) bool {
-	return true // TODO: FIX
-	// var result struct{ Count int }
-	// currentField, _, _ := fl.GetStructFieldOK()
-	// table := modelTableNameMap[currentField.Type().Name()] // table name
+	var result struct{ Count int }
+	table := fl.Top().MethodByName("TableName").Call([]reflect.Value{})[0]
+	value := fl.Field().String() // value
+	column := fl.FieldName()     // column name
 
-	// value := fl.Field().String() // value
-	// column := fl.FieldName()     // column name
-	// sql := fmt.Sprintf("select count(*) from %s where %s='%s'", table, column, value)
-	// db.GetDB().Raw(sql).Scan(&result)
-	// dup := result.Count > 0
-	// return !dup
+	sql := fmt.Sprintf("select count(*) from %s where %s='%s'", table, column, value)
+	db.GetDB().Raw(sql).Scan(&result)
+	dup := result.Count > 0
+	return !dup
 }
