@@ -84,6 +84,7 @@ func DestroyProduct(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 	} else {
 		db.GetDB().Model(&_product).Update("DeletedAt", time.Now())
+		_product.SoftDeleteVaiants()
 		c.JSON(http.StatusOK, gin.H{})
 	}
 }

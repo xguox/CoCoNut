@@ -90,6 +90,11 @@ func (p *Product) AfterCreate(tx *gorm.DB) (err error) {
 	return
 }
 
+// SoftDeleteVaiants 把关联的 Variants 也 delete
+func (p *Product) SoftDeleteVaiants() {
+	db.GetDB().Table("variants").Where("product_id = ?", p.ID).Delete(&Variant{})
+}
+
 // PRODUCT VALIDATOR
 
 type ProductValidator struct {
