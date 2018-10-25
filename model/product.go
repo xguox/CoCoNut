@@ -29,6 +29,7 @@ type Product struct {
 	Category    Category
 	Cover       *string
 	Variants    []Variant
+	Options     []Option
 }
 
 func GetProducts() []Product {
@@ -93,6 +94,21 @@ func (p *Product) AfterCreate(tx *gorm.DB) (err error) {
 // SoftDeleteVaiants 把关联的 Variants 也 delete
 func (p *Product) SoftDeleteVaiants() {
 	db.GetDB().Table("variants").Where("product_id = ?", p.ID).Delete(&Variant{})
+}
+
+func (p *Product) GetDefaultVariant() *Variant {
+	var v Variant
+	db.GetDB().Find(&v, "product_id = ? AND is_default = ? AND deleted_at IS NULL", p.ID, true)
+	return &v
+}
+
+// AddOptions 初始化 Options 以及 Variants
+func (p *Product) AddOptions(options []Option) error {
+	tran := db.GetDB().Begin()
+	tran.Where("product_id = ?", p.ID).Delete(&Option{})
+	tran.Model(&p).Association("Options").Append(options)
+	err := tran.Commit().Error
+	return err
 }
 
 // PRODUCT VALIDATOR
