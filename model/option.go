@@ -38,16 +38,19 @@ func (o *OptionsValidator) Bind(c *gin.Context) error {
 		return err
 	}
 
+	var optionsMap = make(map[string][]string)
+
 	for index, option := range o.OptionsTmp {
 		if index > 2 {
 			break
 		}
-
 		if option.Name == "" || len(option.Values) < 1 {
 			continue
 		}
-
-		o.Options = append(o.Options, Option{Name: option.Name, Values: option.Values})
+		optionsMap[option.Name] = option.Values
+	}
+	for name, values := range optionsMap {
+		o.Options = append(o.Options, Option{Name: name, Values: values})
 	}
 	return nil
 }
