@@ -42,7 +42,24 @@ func BuildOptions(c *gin.Context) {
 
 // AddSingleValue 单独给一个 option 加一个 value
 func AddSingleValue(c *gin.Context) {
+	_product, err := model.GetProductByID(c.Params.ByName("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+	option, err := _product.FindOptionByID(c.Params.ByName("option_id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no option found"})
+		return
+	}
+	var reqJSON struct {
+		Value string
+	}
 
+	c.BindJSON(&reqJSON)
+	option.AddValue(reqJSON.Value)
+	// TODO: err handle
+	c.JSON(http.StatusOK, gin.H{"message": "Value add successfully!"})
 }
 
 // DeleteSingleValue 删除单个 option 的单个 value

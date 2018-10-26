@@ -126,31 +126,20 @@ func (p *Product) AddOptions(options []Option) error {
 // RebuildVariants 根据 Options 生成相应的 Variants, 原有 Variants 删除???
 func (p *Product) RebuildVariants() {
 	db := db.GetDB()
-
 	var options []Option
-	var variants []Variant
 	db.Model(&p).Select([]string{"values"}).Association("Options").Find(&options)
 
-	optionsCount := len(options)
-	for _, option1 := range options[0].Values {
-		if optionsCount > 1 {
-			for _, option2 := range options[1].Values {
-				if optionsCount > 2 {
-					for _, option3 := range options[2].Values {
-						// create variant with 3 options
-						variants = append(variants, Variant{Option1: option1, Option2: option2, Option3: option3})
-					}
-				} else {
-					// create variant with 2 options
-					variants = append(variants, Variant{Option1: option1, Option2: option2})
-				}
-			}
-		} else {
-			// create variant with 1 options
-			variants = append(variants, Variant{Option1: option1})
-		}
+	variants := VariantsBuilding(options)
+	db.Model(&p).Association("Variants").Append(&variants)
+}
+
+func (p *Product) FindOptionByID(id string) (*Option, error) {
+	var option Option
+
+	if err := db.GetDB().Where("product_id = ?", p.ID).First(&option).Error; err != nil {
+		return nil, err
 	}
-	db.Model(&p).Association("Variants").Append(variants)
+	return &option, nil
 }
 
 // Options & Variants END

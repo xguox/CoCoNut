@@ -1,6 +1,7 @@
 package model
 
 import (
+	"coconut/db"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,58 @@ type Option struct {
 	Values    pq.StringArray `gorm:"type:varchar(100)[]"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+func (o *Option) AddValue(newVal string) error {
+	currentValues := o.Values
+	for _, val := range currentValues {
+		if newVal == val {
+			return nil
+		}
+	}
+	var options []Option
+	db := db.GetDB()
+	db.Model(&o).Related(&o.Product)
+	db.Where("product_id = ?", o.ProductID).Find(&options)
+	for i, option := range options {
+		if option.Name == o.Name {
+			option.Values = []string{newVal}
+			options[i] = option
+			break
+		}
+	}
+	variants := VariantsBuilding(options)
+	tran := db.Begin()
+	tran.Model(&o).Update("values", append(currentValues, newVal))
+	tran.Model(&o.Product).Association("Variants").Append(variants)
+	err := tran.Commit().Error
+
+	return err
+}
+
+func VariantsBuilding(options []Option) []Variant {
+	var variants []Variant
+
+	optionsCount := len(options)
+	for _, option1 := range options[0].Values {
+		if optionsCount > 1 {
+			for _, option2 := range options[1].Values {
+				if optionsCount > 2 {
+					for _, option3 := range options[2].Values {
+						// create variant with 3 options
+						variants = append(variants, Variant{Option1: option1, Option2: option2, Option3: option3})
+					}
+				} else {
+					// create variant with 2 options
+					variants = append(variants, Variant{Option1: option1, Option2: option2})
+				}
+			}
+		} else {
+			// create variant with 1 options
+			variants = append(variants, Variant{Option1: option1})
+		}
+	}
+	return variants
 }
 
 // Options Validator
