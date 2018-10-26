@@ -13,7 +13,7 @@ type Variant struct {
 	ProductID uint
 	Product   Product
 	IsDefault bool
-	Option1   *string
-	Option2   *string
-	Option3   *string
+	Option1   string
+	Option2   string
+	Option3   string
 }

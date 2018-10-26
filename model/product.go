@@ -102,14 +102,58 @@ func (p *Product) GetDefaultVariant() *Variant {
 	return &v
 }
 
-// AddOptions 初始化 Options 以及 Variants
+// Options & Variants START
+//
+//
+// AddOptions 初始化 Options
 func (p *Product) AddOptions(options []Option) error {
+	if len(options) < 1 {
+		return nil
+	}
+
 	tran := db.GetDB().Begin()
+	tran.Where("product_id = ? AND is_default = ?", p.ID, true).Delete(&Variant{})
 	tran.Where("product_id = ?", p.ID).Delete(&Option{})
 	tran.Model(&p).Association("Options").Append(options)
 	err := tran.Commit().Error
-	return err
+	if err != nil {
+		return err
+	}
+	p.RebuildVariants()
+	return nil
 }
+
+// RebuildVariants 根据 Options 生成相应的 Variants, 原有 Variants 删除???
+func (p *Product) RebuildVariants() {
+	db := db.GetDB()
+
+	var options []Option
+	var variants []Variant
+	db.Model(&p).Select([]string{"values"}).Association("Options").Find(&options)
+
+	optionsCount := len(options)
+	for _, option1 := range options[0].Values {
+		if optionsCount > 1 {
+			for _, option2 := range options[1].Values {
+				if optionsCount > 2 {
+					for _, option3 := range options[2].Values {
+						// create variant with 3 options
+						variants = append(variants, Variant{Option1: option1, Option2: option2, Option3: option3})
+					}
+				} else {
+					// create variant with 2 options
+					variants = append(variants, Variant{Option1: option1, Option2: option2})
+				}
+			}
+		} else {
+			// create variant with 1 options
+			variants = append(variants, Variant{Option1: option1})
+		}
+	}
+	db.Model(&p).Association("Variants").Append(variants)
+}
+
+// Options & Variants END
 
 // PRODUCT VALIDATOR
 

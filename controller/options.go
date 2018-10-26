@@ -15,27 +15,24 @@ func InitBuildOptions(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
 		return
-	} else {
-
-		defaultVariant := _product.GetDefaultVariant()
-
-		if defaultVariant == nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": "Oops!"})
-			return
-		}
-
-		v := model.OptionsValidator{}
-
-		if err := v.Bind(c); err != nil {
-			c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
-			return
-		}
-		if err = _product.AddOptions(v.Options); err != nil {
-			c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": "Options created successfully!"})
 	}
+	defaultVariant := _product.GetDefaultVariant()
+
+	if defaultVariant == nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": "Oops!"})
+		return
+	}
+
+	v := model.OptionsValidator{}
+	if err := v.Bind(c); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+		return
+	}
+	if err = _product.AddOptions(v.Options); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Options created successfully!"})
 }
 
 // BuildOptions 已存在一个或多个 Options 组合时候, 添加新的 option, 新添加的 option 只能有一个 value
