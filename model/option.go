@@ -102,35 +102,37 @@ func (o *OptionsValidator) Bind(c *gin.Context) error {
 		if option.Name == "" || len(option.Values) < 1 {
 			continue
 		}
-		optionsMap[option.Name] = option.Values
+		optionsMap[option.Name] = append(optionsMap[option.Name], option.Values...)
 	}
+	initPosition := 0
 	for name, values := range optionsMap {
-		o.Options = append(o.Options, Option{Name: name, Values: values})
+		initPosition++
+		o.Options = append(o.Options, Option{Name: name, Values: values, Position: initPosition})
 	}
 	return nil
 }
 
 // Option Validator
+//
+// type OptionValidator struct {
+// 	OptionTmp struct {
+// 		Name   string         `form:"name" json:"name" binding:"required"`
+// 		Values pq.StringArray `form:"values" json:"values"`
+// 	} `json:"option"`
+// 	OptionModel Option `json:"-"`
+// }
 
-type OptionValidator struct {
-	OptionTmp struct {
-		Name   string         `form:"name" json:"name" binding:"required"`
-		Values pq.StringArray `form:"values" json:"values"`
-	} `json:"option"`
-	OptionModel Option `json:"-"`
-}
+// func (o *OptionValidator) TableName() string {
+// 	return "options"
+// }
 
-func (o *OptionValidator) TableName() string {
-	return "options"
-}
-
-func (ov *OptionValidator) Bind(c *gin.Context) error {
-	b := binding.Default(c.Request.Method, c.ContentType())
-	err := c.ShouldBindWith(ov, b)
-	if err != nil {
-		return err
-	}
-	ov.OptionModel.Name = ov.OptionTmp.Name
-	ov.OptionModel.Values = ov.OptionTmp.Values
-	return nil
-}
+// func (ov *OptionValidator) Bind(c *gin.Context) error {
+// 	b := binding.Default(c.Request.Method, c.ContentType())
+// 	err := c.ShouldBindWith(ov, b)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	ov.OptionModel.Name = ov.OptionTmp.Name
+// 	ov.OptionModel.Values = ov.OptionTmp.Values
+// 	return nil
+// }

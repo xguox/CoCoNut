@@ -35,9 +35,29 @@ func InitBuildOptions(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Options created successfully!"})
 }
 
-// BuildOptions 已存在一个或多个 Options 组合时候, 添加新的 option, 新添加的 option 只能有一个 value
-func BuildOptions(c *gin.Context) {
-
+// CreateOption 已存在一个或多个 Options 组合时候, 添加新的 option, 新添加的 option 只能有一个 value
+func CreateOption(c *gin.Context) {
+	id := c.Params.ByName("id")
+	_product, err := model.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+	var reqJSON struct {
+		Name  string
+		Value string
+	}
+	c.BindJSON(&reqJSON)
+	if _product.OptionExists(reqJSON.Name) {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Option 已存在"})
+		return
+	}
+	position := len(_product.Options) + 1
+	if position > 3 {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Option 最多3个"})
+		return
+	}
+	_product.AddOption(model.Option{Name: reqJSON.Name, Values: []string{reqJSON.Value}, Position: position})
 }
 
 // AddSingleValue 单独给一个 option 加一个 value
@@ -57,18 +77,20 @@ func AddSingleValue(c *gin.Context) {
 	}
 
 	c.BindJSON(&reqJSON)
-	option.AddValue(reqJSON.Value)
-	// TODO: err handle
+	if err = option.AddValue(reqJSON.Value); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Value add successfully!"})
-}
-
-// DeleteSingleValue 删除单个 option 的单个 value
-func DeleteSingleValue(c *gin.Context) {
-
 }
 
 // DeleteOption 删除单个 option (仅当 option 只有一个 value 时候可以操作)
 func DeleteOption(c *gin.Context) {
+
+}
+
+// DeleteSingleValue 删除单个 option 的单个 value
+func DeleteSingleValue(c *gin.Context) {
 
 }
 

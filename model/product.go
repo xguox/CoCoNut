@@ -47,6 +47,7 @@ func GetProductByID(id string) (Product, error) {
 	}
 	tran.Model(&p).Related(&p.Category, "Category")
 	tran.Model(p).Related(&p.Tags, "Tags")
+	tran.Model(p).Related(&p.Options, "Options")
 	err := tran.Commit().Error
 	return p, err
 }
@@ -108,6 +109,34 @@ func (p *Product) GetDefaultVariant() *Variant {
 // Options & Variants START
 //
 //
+
+// OptionExists 是否存在 Name: name 的 Option
+func (p *Product) OptionExists(name string) bool {
+	notFound := db.GetDB().Where("name = ? AND product_id = ?", name, p.ID).First(&Option{}).RecordNotFound()
+	return !notFound
+}
+
+// AddOption 添加一个新的 Option(Values只有一个值), 现有的非 default Variants 的对应值改变即可
+func (p *Product) AddOption(option Option) error {
+	var column string
+	if option.Position == 0 || option.Position == 1 {
+		column = "option1"
+	} else if option.Position == 2 {
+		column = "option2"
+	} else {
+		column = "option3"
+	}
+	tran := db.GetDB().Begin()
+	tran.Where("product_id = ? AND is_default = ?", p.ID, true).Delete(&Variant{})
+	tran.Model(&p).Association("Options").Append(option)
+	tran.Where("product_id = ? AND is_default = ?", p.ID, false).Update(column, option.Values[0])
+	err := tran.Commit().Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // AddOptions 初始化 Options
 func (p *Product) AddOptions(options []Option) error {
 	if len(options) < 1 {
