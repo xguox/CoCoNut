@@ -41,7 +41,10 @@ func GetProducts() []Product {
 func GetProductByID(id string) (Product, error) {
 	var p Product
 	tran := db.GetDB().Begin()
-	tran.Where("id = ?", id).First(&p)
+	if err := tran.Where("id = ?", id).First(&p).Error; err != nil {
+		tran.Rollback()
+		return p, err
+	}
 	tran.Model(&p).Related(&p.Category, "Category")
 	tran.Model(p).Related(&p.Tags, "Tags")
 	err := tran.Commit().Error
