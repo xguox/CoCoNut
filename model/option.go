@@ -2,6 +2,7 @@ package model
 
 import (
 	"coconut/db"
+	"coconut/util"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -51,11 +52,12 @@ func VariantsBuilding(options []Option) []Variant {
 	var variants []Variant
 
 	optionsCount := len(options)
-	for _, option1 := range options[0].Values {
+
+	for _, option1 := range util.UniqSlice(options[0].Values) {
 		if optionsCount > 1 {
-			for _, option2 := range options[1].Values {
+			for _, option2 := range util.UniqSlice(options[1].Values) {
 				if optionsCount > 2 {
-					for _, option3 := range options[2].Values {
+					for _, option3 := range util.UniqSlice(options[2].Values) {
 						// create variant with 3 options
 						variants = append(variants, Variant{Option1: option1, Option2: option2, Option3: option3})
 					}
@@ -116,6 +118,10 @@ type OptionValidator struct {
 		Values pq.StringArray `form:"values" json:"values"`
 	} `json:"option"`
 	OptionModel Option `json:"-"`
+}
+
+func (o *OptionValidator) TableName() string {
+	return "options"
 }
 
 func (ov *OptionValidator) Bind(c *gin.Context) error {

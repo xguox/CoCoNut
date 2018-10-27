@@ -1,8 +1,8 @@
 package serializer
 
 import (
+	"coconut/middleware"
 	"coconut/model"
-	"coconut/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +25,7 @@ func (us *UserSerializer) Response() UserResponse {
 	user := UserResponse{
 		Username: currentUser.Username,
 		Email:    currentUser.Email,
-		Token:    util.GenerateToken(currentUser.ID),
+		Token:    middleware.GenerateToken(currentUser.ID),
 	}
 	return user
 }

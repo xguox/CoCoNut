@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"coconut/middleware"
 	"coconut/model"
 	"coconut/util"
 	"coconut/serializer"
@@ -59,7 +60,7 @@ func UserLogin(c *gin.Context) {
 		c.JSON(http.StatusForbidden, gin.H{"message": "Invalid password"})
 		return
 	}
-	util.UpdateContextCurrentUser(c, user.ID)
+	middleware.UpdateContextCurrentUser(c, user.ID)
 	serializer := serializer.UserSerializer{c}
 	c.JSON(http.StatusOK, gin.H{"user": serializer.Response()})
 }
