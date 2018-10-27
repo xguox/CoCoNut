@@ -120,7 +120,9 @@ func (p *Product) OptionExists(name string) bool {
 func (p *Product) AddOption(option Option) error {
 	var column string
 	if option.Position == 0 || option.Position == 1 {
-		column = "option1"
+		// 添加的是第一个 Option, 此前该 Product 的 Options 为空
+		err := p.AddOptions([]Option{option})
+		return err
 	} else if option.Position == 2 {
 		column = "option2"
 	} else {
@@ -129,7 +131,7 @@ func (p *Product) AddOption(option Option) error {
 	tran := db.GetDB().Begin()
 	tran.Where("product_id = ? AND is_default = ?", p.ID, true).Delete(&Variant{})
 	tran.Model(&p).Association("Options").Append(option)
-	tran.Where("product_id = ? AND is_default = ?", p.ID, false).Update(column, option.Values[0])
+	tran.Model(&Variant{}).Where("product_id = ? AND is_default = ?", p.ID, false).Update(column, option.Values[0])
 	err := tran.Commit().Error
 	if err != nil {
 		return err

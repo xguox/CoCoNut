@@ -48,6 +48,10 @@ func CreateOption(c *gin.Context) {
 		Value string
 	}
 	c.BindJSON(&reqJSON)
+	if reqJSON.Name == "" || reqJSON.Value == "" {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "无效参数"})
+		return
+	}
 	if _product.OptionExists(reqJSON.Name) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Option 已存在"})
 		return
@@ -57,7 +61,12 @@ func CreateOption(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Option 最多3个"})
 		return
 	}
-	_product.AddOption(model.Option{Name: reqJSON.Name, Values: []string{reqJSON.Value}, Position: position})
+	err = _product.AddOption(model.Option{Name: reqJSON.Name, Values: []string{reqJSON.Value}, Position: position})
+	if err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"message": "Option created successfully!"})
+	}
 }
 
 // AddSingleValue 单独给一个 option 加一个 value
