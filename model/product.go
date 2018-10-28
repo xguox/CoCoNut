@@ -139,16 +139,17 @@ func (p *Product) AddOption(option Option) error {
 	return nil
 }
 
-// AddOptions 初始化 Options
+// AddOptions 初始化 Options, delete 所有 variants!
 func (p *Product) AddOptions(options []Option) error {
 	if len(options) < 1 {
 		return nil
 	}
 
 	tran := db.GetDB().Begin()
-	tran.Where("product_id = ? AND is_default = ?", p.ID, true).Delete(&Variant{})
+	tran.Where("product_id = ?", p.ID).Delete(&Variant{})
 	tran.Where("product_id = ?", p.ID).Delete(&Option{})
-	tran.Model(&p).Association("Options").Append(options)
+	tran.Model(&p).Association("Options").Replace(options)
+
 	err := tran.Commit().Error
 	if err != nil {
 		return err

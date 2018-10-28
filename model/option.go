@@ -48,11 +48,11 @@ func (o *Option) AddValue(newVal string) error {
 	return err
 }
 
-func VariantsBuilding(options []Option) []Variant {
-	var variants []Variant
-
+func VariantsBuilding(options []Option) (variants []Variant) {
 	optionsCount := len(options)
-
+	if optionsCount < 1 {
+		return
+	}
 	for _, option1 := range util.UniqSlice(options[0].Values) {
 		if optionsCount > 1 {
 			for _, option2 := range util.UniqSlice(options[1].Values) {
@@ -71,7 +71,7 @@ func VariantsBuilding(options []Option) []Variant {
 			variants = append(variants, Variant{Option1: option1})
 		}
 	}
-	return variants
+	return
 }
 
 // Options Validator
