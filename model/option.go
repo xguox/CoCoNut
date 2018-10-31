@@ -23,10 +23,9 @@ type Option struct {
 
 func (o *Option) AddValue(newVal string) error {
 	currentValues := o.Values
-	for _, val := range currentValues {
-		if newVal == val {
-			return nil
-		}
+
+	if util.SliceContains(currentValues, newVal) {
+		return nil
 	}
 	var options []Option
 	db := db.GetDB()
@@ -46,6 +45,43 @@ func (o *Option) AddValue(newVal string) error {
 	err := tran.Commit().Error
 
 	return err
+}
+
+func (o *Option) RemoveValue(rmVal string) error {
+	currentValues := o.Values
+	var found = false
+	for i, val := range currentValues {
+		if val == rmVal {
+			currentValues = append(currentValues[:i], currentValues[i+1:]...)
+			found = true
+			break
+		}
+	}
+	if !found {
+		return nil
+	}
+	var column string
+	position := o.Position
+
+	if position == 0 || position == 1 {
+		column = "option1"
+	} else if position == 2 {
+		column = "option2"
+	} else {
+		column = "option3"
+	}
+	tran := db.GetDB().Begin()
+	tran.Where("product_id = ?", o.ProductID).Where(column + " = ?", rmVal).Delete(&Variant{})
+	if len(currentValues) == 0 {
+		tran.Delete(&o)
+	} else {
+		tran.Model(&o).Update("values", currentValues)
+	}
+	err := tran.Commit().Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func VariantsBuilding(options []Option) (variants []Variant) {

@@ -100,7 +100,27 @@ func DeleteOption(c *gin.Context) {
 
 // DeleteSingleValue 删除单个 option 的单个 value
 func DeleteSingleValue(c *gin.Context) {
+	_product, err := model.GetProductByID(c.Params.ByName("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+	option, err := _product.FindOptionByID(c.Params.ByName("option_id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no option found"})
+		return
+	}
 
+	var reqJSON struct {
+		Value string
+	}
+
+	c.BindJSON(&reqJSON)
+	if err = option.RemoveValue(reqJSON.Value); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Value remove successfully!"})
 }
 
 // ReorderOptions 排列 Options

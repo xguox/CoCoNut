@@ -17,3 +17,12 @@ func UniqSlice(strSlice []string) []string {
 	result := strSlice[:j+1]
 	return result
 }
+
+func SliceContains(sl []string, str string) bool {
+	for _, a := range sl {
+		if a == str {
+			return true
+		}
+	}
+	return false
+}

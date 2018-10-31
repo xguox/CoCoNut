@@ -171,7 +171,7 @@ func (p *Product) RebuildVariants() {
 func (p *Product) FindOptionByID(id string) (*Option, error) {
 	var option Option
 
-	if err := db.GetDB().Where("product_id = ?", p.ID).First(&option).Error; err != nil {
+	if err := db.GetDB().Where("product_id = ? AND id = ?", p.ID, id).First(&option).Error; err != nil {
 		return nil, err
 	}
 	return &option, nil
