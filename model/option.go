@@ -89,6 +89,7 @@ func VariantsBuilding(options []Option) (variants []Variant) {
 	if optionsCount < 1 {
 		return
 	}
+	// TODO: empty string
 	for _, option1 := range util.UniqSlice(options[0].Values) {
 		if optionsCount > 1 {
 			for _, option2 := range util.UniqSlice(options[1].Values) {

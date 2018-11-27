@@ -86,6 +86,10 @@ func AddSingleValue(c *gin.Context) {
 	}
 
 	c.BindJSON(&reqJSON)
+	if reqJSON.Value == "" {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "无效参数"})
+		return
+	}
 	if err = option.AddValue(reqJSON.Value); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
 		return
@@ -95,7 +99,23 @@ func AddSingleValue(c *gin.Context) {
 
 // DeleteOption 删除单个 option (仅当 option 只有一个 value 时候可以操作)
 func DeleteOption(c *gin.Context) {
+	_product, err := model.GetProductByID(c.Params.ByName("id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+	option, err := _product.FindOptionByID(c.Params.ByName("option_id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no option found"})
+		return
+	}
 
+	if err = _product.DeleteOption(option); err != nil {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{"status": http.StatusUnprocessableEntity, "message": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "已删除!"})
 }
 
 // DeleteSingleValue 删除单个 option 的单个 value

@@ -22,7 +22,7 @@ realize start --run
 - [x] PRODUCT
 - [x] USER & AUTH
 - [x] TAGGING
-- [ ] OPTIONS
+- [x] OPTIONS
 - [ ] VARIANT
 - [ ] CUSTOMER
 - [ ] ADDRESS

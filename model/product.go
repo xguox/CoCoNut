@@ -2,6 +2,7 @@ package model
 
 import (
 	"coconut/db"
+	"errors"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -136,6 +137,28 @@ func (p *Product) AddOption(option Option) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// DeleteOption 删除一个 Option
+func (p *Product) DeleteOption(option *Option) error {
+	if len(option.Values) > 1 {
+		return errors.New("Values 长度大于1不能删除")
+	}
+
+	tran := db.GetDB().Begin()
+	tran.Delete(&option)
+	tran.Where("product_id = ?", p.ID).Delete(&Variant{})
+	err := tran.Commit().Error
+	if err != nil {
+		return err
+	}
+	if len(p.Options) == 1 {
+		db.GetDB().Unscoped().Model(&Variant{}).Where("product_id = ? AND is_default = ?", p.ID, true).Update("deleted_at", gorm.Expr("NULL"))
+	} else {
+		p.RebuildVariants()
+	}
+
 	return nil
 }
 
