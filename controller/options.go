@@ -2,11 +2,26 @@ package controller
 
 import (
 	"coconut/model"
+	. "coconut/serializer"
 	"coconut/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+// FetchOptions 列出某个 Product 的 Options
+func FetchOptions(c *gin.Context) {
+	id := c.Params.ByName("id")
+	_product, err := model.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+
+	s := OptionsSerializer{_product.Options}
+	c.JSON(http.StatusOK, gin.H{"data": s.Response()})
+
+}
 
 // InitBuildOptions 仅当 IsDefault 为 true 的 Variant 的 deleted_at 不为空的时候初始化 options 组合
 func InitBuildOptions(c *gin.Context) {

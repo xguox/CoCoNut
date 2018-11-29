@@ -41,12 +41,15 @@ func adminRoutesRegister(admin *gin.RouterGroup) {
 		products.PUT("/:id", UpdateProduct)
 		products.DELETE("/:id", DestroyProduct)
 		products.POST("/:id/tagging", TaggingProduct)
+
+		products.GET("/:id/options", FetchOptions)
 		products.POST("/:id/init-build-options", InitBuildOptions)
 		products.POST("/:id/create-option", CreateOption)
 		products.POST("/:id/options/:option_id/add-single-val", AddSingleValue)
 		products.DELETE("/:id/options/:option_id/del-val", DeleteSingleValue)
 		products.DELETE("/:id/options/:option_id", DeleteOption)
 		products.POST("/:id/reorder-options", ReorderOptions)
+
 	}
 
 	categories := admin.Group("/categories")
