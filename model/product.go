@@ -47,6 +47,7 @@ func GetProductByID(id string) (Product, error) {
 		return p, err
 	}
 	tran.Model(&p).Related(&p.Category, "Category")
+	tran.Model(p).Related(&p.Variants, "Variants")
 	tran.Model(p).Related(&p.Tags, "Tags")
 	tran.Model(p).Related(&p.Options, "Options")
 	err := tran.Commit().Error
