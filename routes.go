@@ -51,6 +51,8 @@ func adminRoutesRegister(admin *gin.RouterGroup) {
 		products.POST("/:id/reorder-options", ReorderOptions)
 
 		products.GET(":id/variants", ProductVariants)
+		products.GET(":id/variants/:variant_id", ProductVariant)
+
 	}
 
 	categories := admin.Group("/categories")

@@ -201,6 +201,14 @@ func (p *Product) FindOptionByID(id string) (*Option, error) {
 	return &option, nil
 }
 
+func (p *Product) FindVariantByID(id string) (*Variant, error) {
+	var variant Variant
+	if err := db.GetDB().Where("product_id = ? AND id = ?", p.ID, id).First(&variant).Error; err != nil {
+		return nil, err
+	}
+	return &variant, nil
+}
+
 // Options & Variants END
 
 // PRODUCT VALIDATOR
