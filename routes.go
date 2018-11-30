@@ -50,9 +50,9 @@ func adminRoutesRegister(admin *gin.RouterGroup) {
 		products.DELETE("/:id/options/:option_id", DeleteOption)
 		products.POST("/:id/reorder-options", ReorderOptions)
 
-		products.GET(":id/variants", ProductVariants)
-		products.GET(":id/variants/:variant_id", ProductVariant)
-
+		products.GET("/:id/variants", ProductVariants)
+		products.GET("/:id/variants/:variant_id", ProductVariant)
+		products.PUT("/:id/variants/:variant_id", UpdateVariant)
 	}
 
 	categories := admin.Group("/categories")

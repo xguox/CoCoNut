@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"coconut/db"
 	"coconut/model"
 	. "coconut/serializer"
+	"coconut/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +37,31 @@ func ProductVariant(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no variant found"})
 	} else {
 		s := VariantSerializer{*_variant}
+		c.JSON(http.StatusOK, s.Response())
+	}
+}
+
+func UpdateVariant(c *gin.Context) {
+	id := c.Params.ByName("id")
+	_product, err := model.GetProductByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no product found"})
+		return
+	}
+	_variant, err := _product.FindVariantByID(c.Params.ByName("variant_id"))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"status": http.StatusNotFound, "message": "no variant found"})
+	} else {
+
+		v := model.VariantValidator{VariantModel: *_variant}
+		if err := v.Bind(c); err != nil {
+			c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+			return
+		}
+
+		db.GetDB().Save(&v.VariantModel)
+
+		s := VariantSerializer{v.VariantModel}
 		c.JSON(http.StatusOK, s.Response())
 	}
 }
