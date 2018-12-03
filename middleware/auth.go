@@ -59,8 +59,11 @@ func GenerateToken(id uint) string {
 
 func UpdateContextCurrentUser(c *gin.Context, currentUserID uint) {
 	var currentUser model.User
-	if currentUserID != 0 {
-		db.GetDB().First(&currentUser, currentUserID)
+
+	if err := db.GetDB().First(&currentUser, currentUserID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+		c.Abort()
+		return
 	}
 	c.Set("current_user_id", currentUserID)
 	c.Set("current_user", currentUser)

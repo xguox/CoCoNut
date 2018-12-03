@@ -21,15 +21,12 @@ func drawRoutes() *gin.Engine {
 }
 
 func adminRoutesRegister(admin *gin.RouterGroup) {
+	admin.POST("login", UserLogin)
+	admin.POST("/users", CreateUser)
 	admin.Use(middleware.AuthMiddleware())
-
-	{
-		admin.POST("login", UserLogin)
-	}
 
 	users := admin.Group("/users")
 	{
-		users.POST("", CreateUser)
 		users.GET("/show", GetUser)
 	}
 
