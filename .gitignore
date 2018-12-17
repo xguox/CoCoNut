@@ -6,3 +6,4 @@ debug
 vendor/
 pg_data/
 conf.yml
+conf.docker.yml
