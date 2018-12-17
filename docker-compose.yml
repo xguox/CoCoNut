@@ -11,6 +11,13 @@ services:
       - ./pg_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  ruby:
+    image: ruby:2.5
+    command: bash -c 'gem install pg && gem install standalone_migrations && rake db:migrate RAILS_ENV=production'
+    working_dir: /ruby_db/
+    volumes:
+      - ./:/ruby_db/
+      - ./config/conf.docker.yml:/ruby_db/config/conf.yml
   gin:
     build: .
     restart: always
