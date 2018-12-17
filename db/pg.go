@@ -1,6 +1,7 @@
 package db
 
 import (
+	. "coconut/config"
 	"fmt"
 	"os/exec"
 
@@ -11,8 +12,9 @@ import (
 var PG *gorm.DB
 
 func init() {
+	dbArgs := fmt.Sprintf("host=%s port=%d dbname=%s password=%s user=postgres sslmode=disable", Conf.Database.Host, Conf.Database.Port, Conf.Database.Basename, Conf.Database.Pwd)
 	var err error
-	PG, err = gorm.Open("postgres", "host=db port=5432 user=postgres dbname=coconut_production sslmode=disable password=postgres")
+	PG, err = gorm.Open("postgres", dbArgs)
 	if err != nil {
 		panic(err)
 	}

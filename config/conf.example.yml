@@ -1,0 +1,8 @@
+server:
+  port: ":9090"
+  secret_base_key: "IMPORTANT: CAN NOT OPEN SOURCE SECRET KEY BASE!!!!!!"
+database:
+  host: localhost
+  port: 5432
+  basename: coconut_development
+  pwd: ''

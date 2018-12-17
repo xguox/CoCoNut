@@ -5,3 +5,4 @@ debug
 .vscode
 vendor/
 frontend/
+conf.yml

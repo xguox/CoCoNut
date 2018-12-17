@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"coconut/config"
 	"coconut/db"
 	"coconut/model"
 	"errors"
@@ -12,7 +13,7 @@ import (
 
 var ErrTokenInvalid = errors.New("invalid token")
 
-const SecretBaseKEY = "IMPORTANT: CAN NOT OPEN SOURCE SECRET KEY BASE!!!!!!"
+var SecretBaseKEY = config.Conf.Server.SecretBaseKEY
 
 type CustomClaims struct {
 	jwt.StandardClaims
