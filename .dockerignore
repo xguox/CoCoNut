@@ -4,4 +4,4 @@ coconut
 debug
 .vscode
 vendor/
-pg_data/
+frontend/
