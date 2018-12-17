@@ -10,10 +10,17 @@
 ##### 运行
 
 ```
+cp config/conf.example.yml config/conf.yml
 rake db:create
 rake db:migrate
 go mod tidy
 realize start --run
+```
+##### or Docker
+
+```
+cp config/conf.example.yml config/conf.docker.yml
+docker-compose up --build
 ```
 
 ##### TODO
@@ -32,4 +39,5 @@ realize start --run
 - [ ] PICTURES
 - [ ] WISH_LIST
 - [ ] GROUPON, COUPON
+- [x] DOCKERIZED
 - [ ] TESTING
