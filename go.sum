@@ -25,6 +25,7 @@ github.com/go-playground/universal-translator v0.16.0/go.mod h1:1AnU7NaIRDWWzGEK
 github.com/go-sql-driver/mysql v1.4.0 h1:7LxgVwFb2hIQtMm87NdgAVfXjnt4OePseqT1tKx+opk=
 github.com/go-sql-driver/mysql v1.4.0/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/golang/appengine v1.1.0/go.mod h1:C7k13PpLjU5SHb7WgwfAwCmVFgi4cpy3kl2zlpoBck8=
+github.com/golang/crypto v0.0.0-20181203042331-505ab145d0a9 h1:2VPKynXZCEf8bI6hOvmbwFg1m0b7ah3m/Yg4JzBsIRQ=
 github.com/golang/crypto v0.0.0-20181203042331-505ab145d0a9/go.mod h1:uZvAcrsnNaCxlh1HorK5dUQHGmEKPh2H/Rl1kehswPo=
 github.com/golang/net v0.0.0-20180826012351-8a410e7b638d/go.mod h1:98y8FxUyMjTdJ5eOj/8vzuiVO14/dkJ98NYhEPG8QGY=
 github.com/golang/protobuf v1.2.0 h1:P3YflyNX/ehuJFLhxviNdFxQPkGK5cDcApsge1SqnvM=
