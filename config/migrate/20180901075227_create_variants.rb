@@ -9,7 +9,7 @@ class CreateVariants < ActiveRecord::Migration[5.1]
       t.string   "option1"
       t.string   "option2"
       t.string   "option3"
-      t.boolean  "is_default", default: "false"
+      t.boolean  "is_default", default: false
       t.timestamps
       t.datetime :deleted_at
     end

@@ -12,10 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2018_09_18_135859) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "categories", force: :cascade do |t|
+  create_table "categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "slug"
     t.string "ancestry"
@@ -29,17 +26,17 @@ ActiveRecord::Schema.define(version: 2018_09_18_135859) do
     t.index ["slug"], name: "index_categories_on_slug"
   end
 
-  create_table "options", force: :cascade do |t|
+  create_table "options", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "product_id"
     t.integer "position"
-    t.text "values"
+    t.string "vals"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_options_on_product_id"
   end
 
-  create_table "products", force: :cascade do |t|
+  create_table "products", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title"
     t.text "body_html"
     t.datetime "published_at"
@@ -60,7 +57,7 @@ ActiveRecord::Schema.define(version: 2018_09_18_135859) do
     t.index ["deleted_at"], name: "index_products_on_deleted_at"
   end
 
-  create_table "taggings", force: :cascade do |t|
+  create_table "taggings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "product_id"
     t.integer "tag_id"
     t.datetime "created_at", null: false
@@ -69,14 +66,14 @@ ActiveRecord::Schema.define(version: 2018_09_18_135859) do
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
   end
 
-  create_table "tags", force: :cascade do |t|
+  create_table "tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "taggings_count", default: 0
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email"
     t.string "username"
     t.string "password_digest"
@@ -87,7 +84,7 @@ ActiveRecord::Schema.define(version: 2018_09_18_135859) do
     t.index ["username"], name: "index_users_on_username"
   end
 
-  create_table "variants", force: :cascade do |t|
+  create_table "variants", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "price", precision: 8, scale: 2, default: "0.0"
     t.string "sku"
     t.integer "stock"

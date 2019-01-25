@@ -118,7 +118,7 @@ func (p *Product) OptionExists(name string) bool {
 	return !notFound
 }
 
-// AddOption 添加一个新的 Option(Values只有一个值), 现有的非 default Variants 的对应值改变即可
+// AddOption 添加一个新的 Option(Vals只有一个值), 现有的非 default Variants 的对应值改变即可
 func (p *Product) AddOption(option Option) error {
 	var column string
 	if option.Position == 0 || option.Position == 1 {
@@ -133,7 +133,7 @@ func (p *Product) AddOption(option Option) error {
 	tran := db.GetDB().Begin()
 	tran.Where("product_id = ? AND is_default = ?", p.ID, true).Delete(&Variant{})
 	tran.Model(&p).Association("Options").Append(option)
-	tran.Model(&Variant{}).Where("product_id = ? AND is_default = ?", p.ID, false).Update(column, option.Values[0])
+	tran.Model(&Variant{}).Where("product_id = ? AND is_default = ?", p.ID, false).Update(column, option.ValuesArr()[0])
 	err := tran.Commit().Error
 	if err != nil {
 		return err
@@ -143,8 +143,8 @@ func (p *Product) AddOption(option Option) error {
 
 // DeleteOption 删除一个 Option
 func (p *Product) DeleteOption(option *Option) error {
-	if len(option.Values) > 1 {
-		return errors.New("Values 长度大于1不能删除")
+	if len(option.ValuesArr()) > 1 {
+		return errors.New("ValuesArr 长度大于1不能删除")
 	}
 
 	tran := db.GetDB().Begin()
@@ -186,7 +186,7 @@ func (p *Product) AddOptions(options []Option) error {
 func (p *Product) RebuildVariants() {
 	db := db.GetDB()
 	var options []Option
-	db.Model(&p).Select([]string{"values"}).Association("Options").Find(&options)
+	db.Model(&p).Select([]string{"vals"}).Association("Options").Find(&options)
 
 	variants := VariantsBuilding(options)
 	db.Model(&p).Association("Variants").Append(&variants)

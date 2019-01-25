@@ -76,7 +76,10 @@ func CreateOption(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": "Option 最多3个"})
 		return
 	}
-	err = _product.AddOption(model.Option{Name: reqJSON.Name, Values: []string{reqJSON.Value}, Position: position})
+
+	_option := model.Option{Name: reqJSON.Name, Position: position}
+	_option.SetValues([]string{reqJSON.Value})
+	err = _product.AddOption(_option)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{"message": err.Error()})
 	} else {

@@ -29,7 +29,7 @@ func (os *OptionSerializer) Response() OptionResponse {
 		Name:      os.Name,
 		Position:  os.Position,
 		ProductID: os.ProductID,
-		Values:    os.Values,
+		Values:    os.ValuesArr(),
 		CreatedAt: os.CreatedAt,
 		UpdatedAt: os.UpdatedAt,
 	}

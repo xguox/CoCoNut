@@ -20,6 +20,7 @@ type DatabaseConf struct {
 	Host     string
 	Port     int
 	Basename string
+	Username string
 	Pwd      string
 }
 

@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd
+      MYSQL_DATABASE: coconut_production
+    ports:
+      - "3306:3306"
+
+  ruby:
+    image: ruby:2.5
+    command: bash -c 'gem install mysql2 && gem install standalone_migrations && rake db:migrate RAILS_ENV=production'
+    working_dir: /ruby_db/
+    depends_on:
+      - "db"
+    volumes:
+      - ./:/ruby_db/
+      - ./config/conf.docker.yml:/ruby_db/config/conf.yml
+  gin:
+    build: .
+    restart: always
+    depends_on:
+      - "db"
+    ports:
+      - "9876:9876"

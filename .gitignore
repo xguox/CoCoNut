@@ -5,6 +5,10 @@ debug
 .vscode
 vendor/
 pg_data/
+db_data/
 conf.yml
 conf.docker.yml
+docker-compose.yml
 .idea/
+
+

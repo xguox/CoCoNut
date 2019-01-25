@@ -17,7 +17,7 @@ require (
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/jinzhu/now v0.0.0-20180511015916-ed742868f2ae // indirect
 	github.com/json-iterator/go v1.1.5 // indirect
-	github.com/lib/pq v1.0.0
+	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-isatty v0.0.3 // indirect
 	github.com/mattn/go-sqlite3 v1.9.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

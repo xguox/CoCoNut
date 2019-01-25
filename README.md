@@ -16,6 +16,7 @@ rake db:migrate
 go mod tidy
 realize start --run
 ```
+
 ##### or Docker
 
 ```
@@ -30,7 +31,7 @@ docker-compose up --build
 - [x] USER & AUTH
 - [x] TAGGING
 - [x] OPTIONS
-- [ ] VARIANT
+- [x] VARIANT
 - [ ] CUSTOMER
 - [ ] ADDRESS
 - [ ] COLLECTION
