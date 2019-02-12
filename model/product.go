@@ -189,7 +189,10 @@ func (p *Product) RebuildVariants() {
 	db.Model(&p).Select([]string{"vals"}).Association("Options").Find(&options)
 
 	variants := VariantsBuilding(options)
-	db.Model(&p).Association("Variants").Append(&variants)
+	//fmt.Println(variants)
+	p.Variants = variants
+	db.Save(&p)
+	//db.Model(&p).Association("Variants").Append(&variants)
 }
 
 func (p *Product) FindOptionByID(id string) (*Option, error) {
