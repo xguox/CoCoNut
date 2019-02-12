@@ -55,10 +55,14 @@ func FindUserByEmail(email string) (User, error) {
 type UserValidator struct {
 	UserTmp struct {
 		Username string `json:"username" binding:"required"`
-		Email    string `json:"email" binding:"required,email"`
+		Email    string `json:"email" binding:"required,email,is-uniq"`
 		Password string `json:"password" binding:"required,min=6,max=64"`
 	} `json:"user"`
 	UserModel User
+}
+
+func (c *UserValidator) TableName() string {
+	return "users"
 }
 
 func (uv *UserValidator) Bind(c *gin.Context) error {

@@ -70,7 +70,7 @@ func ValidateUniq(fl validator.FieldLevel) bool {
 	value := fl.Field().String() // value
 	column := fl.FieldName()     // column name
 
-	sql := fmt.Sprintf("select count(*) from %s where %s='%s'", table, column, value)
+	sql := fmt.Sprintf("SELECT COUNT(*) AS count FROM %s WHERE %s='%s'", table, column, value)
 	db.GetDB().Raw(sql).Scan(&result)
 	dup := result.Count > 0
 	return !dup
