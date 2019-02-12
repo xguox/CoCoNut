@@ -62,8 +62,8 @@ func (s *ProductSerializer) Response() ProductResponse {
 func (s *ProductsSerializer) Response() []ProductResponse {
 	response := []ProductResponse{}
 	for _, product := range s.Products {
-		product.GetCategory()
-		product.GetTags()
+		//product.GetCategory()
+		//product.GetTags()
 		serializer := ProductSerializer{product}
 		response = append(response, serializer.Response())
 	}

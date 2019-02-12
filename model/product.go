@@ -35,7 +35,7 @@ type Product struct {
 
 func GetProducts() []Product {
 	var products []Product
-	db.GetDB().Find(&products)
+	db.GetDB().Preload("Category").Preload("Tags").Find(&products)
 	return products
 }
 
