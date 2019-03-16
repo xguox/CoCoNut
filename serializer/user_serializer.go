@@ -1,8 +1,8 @@
 package serializer
 
 import (
-	"coconut/middleware"
-	"coconut/model"
+	"github.com/xguox/coconut/middleware"
+	"github.com/xguox/coconut/model"
 
 	"github.com/gin-gonic/gin"
 )

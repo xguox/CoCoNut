@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"coconut/config"
-	"coconut/db"
-	"coconut/model"
+	"github.com/xguox/coconut/config"
+	"github.com/xguox/coconut/db"
+	"github.com/xguox/coconut/model"
 	"errors"
 	"net/http"
 

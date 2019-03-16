@@ -1,7 +1,7 @@
 package db
 
 import (
-	. "coconut/config"
+	. "github.com/xguox/coconut/config"
 	"fmt"
 	"os/exec"
 

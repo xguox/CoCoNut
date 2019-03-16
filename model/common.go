@@ -1,7 +1,7 @@
 package model
 
 import (
-	"coconut/db"
+	"github.com/xguox/coconut/db"
 )
 
 func SaveData(data interface{}) error {

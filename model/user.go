@@ -1,7 +1,7 @@
 package model
 
 import (
-	"coconut/db"
+	"github.com/xguox/coconut/db"
 	"errors"
 
 	"github.com/gin-gonic/gin"

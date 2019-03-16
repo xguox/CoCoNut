@@ -1,8 +1,8 @@
 package main
 
 import (
-	. "coconut/config"
-	"coconut/db"
+	. "github.com/xguox/coconut/config"
+	"github.com/xguox/coconut/db"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )

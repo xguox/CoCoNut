@@ -1,8 +1,8 @@
 package model
 
 import (
-	"coconut/db"
-	"coconut/util"
+	"github.com/xguox/coconut/db"
+	"github.com/xguox/coconut/util"
 	"encoding/json"
 	"time"
 

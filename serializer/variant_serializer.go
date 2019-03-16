@@ -1,7 +1,7 @@
 package serializer
 
 import (
-	"coconut/model"
+	"github.com/xguox/coconut/model"
 	"time"
 )
 

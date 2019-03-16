@@ -1,8 +1,8 @@
 package main
 
 import (
-	. "coconut/controller"
-	"coconut/middleware"
+	. "github.com/xguox/coconut/controller"
+	"github.com/xguox/coconut/middleware"
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"

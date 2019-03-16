@@ -1,4 +1,4 @@
-module coconut
+module github.com/xguox/coconut
 
 require (
 	cloud.google.com/go v0.27.0 // indirect

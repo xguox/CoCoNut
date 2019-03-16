@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"coconut/model"
+	"github.com/xguox/coconut/model"
 
-	"coconut/util"
+	"github.com/xguox/coconut/util"
 
 	"net/http"
 	"time"

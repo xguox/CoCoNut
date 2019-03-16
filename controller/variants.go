@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"coconut/db"
-	"coconut/model"
-	. "coconut/serializer"
-	"coconut/util"
+	"github.com/xguox/coconut/db"
+	"github.com/xguox/coconut/model"
+	. "github.com/xguox/coconut/serializer"
+	"github.com/xguox/coconut/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

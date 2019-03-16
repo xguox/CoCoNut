@@ -2,7 +2,7 @@
 
 ##### 主要依赖
 
-- Go 1.11
+- Go 1.11+
 - [https://github.com/oxequa/realize](realize)
 - ruby (db migration)
 - `db/` [standalone_migrations](https://github.com/thuss/standalone-migrations) gem install standalone_migrations

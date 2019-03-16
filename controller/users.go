@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"coconut/middleware"
-	"coconut/model"
-	"coconut/util"
-	"coconut/serializer"
+	"github.com/xguox/coconut/middleware"
+	"github.com/xguox/coconut/model"
+	"github.com/xguox/coconut/util"
+	"github.com/xguox/coconut/serializer"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
