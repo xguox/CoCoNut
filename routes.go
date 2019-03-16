@@ -4,11 +4,14 @@ import (
 	. "coconut/controller"
 	"coconut/middleware"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func drawRoutes() *gin.Engine {
 	router := gin.Default()
+	router.Use(static.Serve("/", static.LocalFile("./views", true)))
+
 	v1 := router.Group("/api/v1/")
 
 	shop := v1.Group("/shop")

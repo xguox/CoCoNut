@@ -6,17 +6,17 @@ schema:
 - name: cocoNUT
   path: .
   commands:
+    install:
+      status: true
+      method: go build -o ./coconut
     run:
       status: true
+      method: ./coconut
   watcher:
     extensions:
     - go
     paths:
-    - /
-    scripts:
-      - type: after
-        command: ./coconut
-        output: true
+    - ./
     ignored_paths:
     - .git
     - .realize

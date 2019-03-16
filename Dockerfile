@@ -1,4 +1,4 @@
-FROM golang:1.11.3
+FROM golang:1.11.5
 ENV GO111MODULE=on GIN_MODE=release
 WORKDIR /apps
 COPY go.mod .

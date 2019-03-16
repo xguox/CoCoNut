@@ -21,6 +21,8 @@ realize start --run
 
 ```
 cp config/conf.example.yml config/conf.docker.yml
+cp docker-compose-example-yml docker-compose.yml
+
 docker-compose up --build
 ```
 
