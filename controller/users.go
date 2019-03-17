@@ -1,11 +1,12 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/xguox/coconut/middleware"
 	"github.com/xguox/coconut/model"
 	"github.com/xguox/coconut/serializer"
 	"github.com/xguox/coconut/util"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -43,6 +44,7 @@ func GetUser(c *gin.Context) {
 	}
 }
 
+// UserLogin godoc
 // @Summary 后台账号登录
 // @Description 后台账号登录
 // @Accept json

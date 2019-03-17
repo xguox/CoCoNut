@@ -3,7 +3,7 @@
 ##### 主要依赖
 
 - Go 1.11+
-- [https://github.com/oxequa/realize](realize)
+- [https://github.com/erikdubbelboer/realize](realize)
 - ruby (db migration)
 - `db/` [standalone_migrations](https://github.com/thuss/standalone-migrations) gem install standalone_migrations
 
@@ -25,6 +25,10 @@ cp docker-compose-example-yml docker-compose.yml
 
 docker-compose up --build
 ```
+
+##### API docs
+
+http://localhost:9876/swagger/index.html
 
 ##### TODO
 

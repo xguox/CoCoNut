@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateCategory godoc
 // @Summary 添加新的商品分类
 // @Description 添加新的商品分类
 // @Accept json
