@@ -3,7 +3,7 @@
 ##### 主要依赖
 
 - Go 1.11+
-- [https://github.com/erikdubbelboer/realize](realize)
+- [https://github.com/erikdubbelboer/realize](https://github.com/erikdubbelboer/realize)
 - ruby (db migration)
 - `db/` [standalone_migrations](https://github.com/thuss/standalone-migrations) gem install standalone_migrations
 
