@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/xguox/coconut/middleware"
 	"github.com/xguox/coconut/model"
-	"github.com/xguox/coconut/util"
 	"github.com/xguox/coconut/serializer"
+	"github.com/xguox/coconut/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -43,6 +43,17 @@ func GetUser(c *gin.Context) {
 	}
 }
 
+// @Summary 后台账号登录
+// @Description 后台账号登录
+// @Accept json
+// @Produce json
+// @Tags auth
+// @Param body body model.LoginValidator true "账号登录请求参数"
+// @Success 200 {string} json "{msg:"请求处理成功"}"
+// @Failure 401 {string} json "{msg:"账号或密码有误"}"
+// @Failure 422 {string} json "{msg:"请求参数有误"}"
+// @Failure 500 {string} json "{msg:"服务器错误"}"
+// @Router /admin/login [post]
 func UserLogin(c *gin.Context) {
 	v := model.LoginValidator{}
 	if err := v.Bind(c); err != nil {
@@ -52,12 +63,12 @@ func UserLogin(c *gin.Context) {
 	user, err := model.FindUserByEmail(v.UserModel.Email)
 
 	if err != nil {
-		c.JSON(http.StatusForbidden, gin.H{"message": "Not Registered email or invalid password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Not Registered email or invalid password"})
 		return
 	}
 
 	if user.CheckPassword(v.UserTmp.Password) != nil {
-		c.JSON(http.StatusForbidden, gin.H{"message": "Invalid password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid password"})
 		return
 	}
 	middleware.UpdateContextCurrentUser(c, user.ID)

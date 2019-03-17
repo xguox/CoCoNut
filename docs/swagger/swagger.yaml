@@ -1,10 +1,112 @@
-basePath: '{{.BasePath}}'
-host: '{{.Host}}'
+basePath: /api/v1
+definitions:
+  model.CategoryValidator:
+    properties:
+      category:
+        properties:
+          name:
+            type: string
+          slug:
+            type: string
+        required:
+        - name
+        - slug
+        type: object
+    type: object
+  model.LoginValidator:
+    properties:
+      user:
+        properties:
+          email:
+            type: string
+          password:
+            type: string
+        required:
+        - email
+        - password
+        type: object
+    type: object
+host: localhost:9876
 info:
-  contact: {}
-  description: '{{.Description}}'
-  license: {}
-  title: '{{.Title}}'
-  version: '{{.Version}}'
-paths: {}
+  contact:
+    name: XguoX
+    url: https://xguox.me
+  description: e-commerce site written by go
+  license:
+    name: MIT
+  termsOfService: https://github.com/xguox/coconut
+  title: Go Shopping Gin API
+  version: "1.0"
+paths:
+  /admin/categories:
+    post:
+      consumes:
+      - application/json
+      description: 添加新的商品分类
+      parameters:
+      - description: 认证 Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 创建分类请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.CategoryValidator'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{msg:"请求处理成功"}'
+          schema:
+            type: string
+        "422":
+          description: '{msg:"请求参数有误"}'
+          schema:
+            type: string
+        "500":
+          description: '{msg:"服务器错误"}'
+          schema:
+            type: string
+      summary: 添加新的商品分类
+      tags:
+      - category
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: 后台账号登录
+      parameters:
+      - description: 账号登录请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginValidator'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{msg:"请求处理成功"}'
+          schema:
+            type: string
+        "401":
+          description: '{msg:"账号或密码有误"}'
+          schema:
+            type: string
+        "422":
+          description: '{msg:"请求参数有误"}'
+          schema:
+            type: string
+        "500":
+          description: '{msg:"服务器错误"}'
+          schema:
+            type: string
+      summary: 后台账号登录
+      tags:
+      - auth
 swagger: "2.0"

@@ -13,6 +13,12 @@ import (
 // @termsOfService https://github.com/xguox/coconut
 // @license.name MIT
 
+// @contact.name XguoX
+// @contact.url https://xguox.me
+
+// @license.name MIT
+// @host localhost:9876
+// @BasePath /api/v1
 func main() {
 	defer db.GetDB().Close()
 	router := drawRoutes()

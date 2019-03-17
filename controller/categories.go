@@ -11,16 +11,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateCategory godoc
-// @Summary Show a account
-// @Description get string by ID
-// @ID get-string-by-int
-// @Accept  json
-// @Produce  json
-// @Param id path int true "Account ID"
-// @Success 200 {object} model.Account
-// @Header 200 {string} Token "qwerty"
-// @Router /accounts/{id} [get]
+// @Summary 添加新的商品分类
+// @Description 添加新的商品分类
+// @Accept json
+// @Produce json
+// @Tags category
+// @Param Authorization header string true "认证 Token"
+// @Param body body model.CategoryValidator true "创建分类请求参数"
+// @Success 200 {string} json "{msg:"请求处理成功"}"
+// @Failure 422 {string} json "{msg:"请求参数有误"}"
+// @Failure 500 {string} json "{msg:"服务器错误"}"
+// @Router /admin/categories [post]
 func CreateCategory(c *gin.Context) {
 	v := model.CategoryValidator{}
 	if err := v.Bind(c); err != nil {
