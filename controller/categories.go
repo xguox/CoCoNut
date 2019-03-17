@@ -11,6 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateCategory godoc
+// @Summary Show a account
+// @Description get string by ID
+// @ID get-string-by-int
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Account ID"
+// @Success 200 {object} model.Account
+// @Header 200 {string} Token "qwerty"
+// @Router /accounts/{id} [get]
 func CreateCategory(c *gin.Context) {
 	v := model.CategoryValidator{}
 	if err := v.Bind(c); err != nil {

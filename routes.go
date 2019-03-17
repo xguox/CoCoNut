@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	. "github.com/xguox/coconut/controller"
+	_ "github.com/xguox/coconut/docs"
 	"github.com/xguox/coconut/middleware"
 
 	"github.com/gin-gonic/contrib/static"
@@ -19,6 +22,7 @@ func drawRoutes() *gin.Engine {
 
 	admin := v1.Group("/admin")
 	adminRoutesRegister(admin)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }

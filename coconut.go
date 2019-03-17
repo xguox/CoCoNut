@@ -7,7 +7,12 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-// main =. =
+// @title Go Shopping Gin API
+// @version 1.0
+// @description e-commerce site written by go
+// @termsOfService https://github.com/xguox/coconut
+// @license.name MIT
+
 func main() {
 	defer db.GetDB().Close()
 	router := drawRoutes()
