@@ -18,6 +18,7 @@ schema:
     paths:
     - ./
     ignored_paths:
+    - frontend
     - .git
     - .realize
     - vendor
