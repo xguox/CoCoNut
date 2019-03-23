@@ -13,7 +13,7 @@ import (
 
 func drawRoutes() *gin.Engine {
 	router := gin.Default()
-	router.Use(static.Serve("/", static.LocalFile("./views", true)))
+	router.Use(static.Serve("/", static.LocalFile("./frontend/build", true)))
 
 	v1 := router.Group("/api/v1/")
 
