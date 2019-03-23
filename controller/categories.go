@@ -19,14 +19,16 @@ import (
 // @Tags category
 // @Param Authorization header string true "认证 Token"
 // @Param body body model.CategoryValidator true "创建分类请求参数"
-// @Success 200 {string} json "{msg:"请求处理成功"}"
-// @Failure 422 {string} json "{msg:"请求参数有误"}"
-// @Failure 500 {string} json "{msg:"服务器错误"}"
+// @Success 200 {string} json "{mark: 0, msg: "", data: {id: 1, name: "category_name"}}"
+// @Failure 422 {string} json "{mark: 1, msg: "err msg", data: {}}"
 // @Router /admin/categories [post]
 func CreateCategory(c *gin.Context) {
+	resp := util.NewResp()
 	v := model.CategoryValidator{}
 	if err := v.Bind(c); err != nil {
-		c.JSON(http.StatusUnprocessableEntity, util.NewValidatorError(err))
+		resp.Mark = util.MarkWarn
+		resp.Msg = "参数有误" // TODO: 拼接 util.NewValidatorError(err)
+		c.JSON(http.StatusUnprocessableEntity, resp)
 		return
 	}
 

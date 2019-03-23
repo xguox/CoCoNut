@@ -1,6 +1,9 @@
 package main
 
 import (
+	_ "net/http/pprof"
+
+	"github.com/DeanThompson/ginpprof"
 	. "github.com/xguox/coconut/config"
 	"github.com/xguox/coconut/db"
 
@@ -22,5 +25,7 @@ import (
 func main() {
 	defer db.GetDB().Close()
 	router := drawRoutes()
+	ginpprof.Wrap(router)
+
 	router.Run(Conf.Server.Port)
 }

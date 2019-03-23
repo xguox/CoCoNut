@@ -50,19 +50,13 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{msg:\"请求处理成功\"}",
+                        "description": "{mark: 0, msg: \"\", data: {id: 1, name: \"category_name\"}}",
                         "schema": {
                             "type": "string"
                         }
                     },
                     "422": {
-                        "description": "{msg:\"请求参数有误\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "{msg:\"服务器错误\"}",
+                        "description": "{mark: 1, msg: \"err msg\", data: {}}",
                         "schema": {
                             "type": "string"
                         }

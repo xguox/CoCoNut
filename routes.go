@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	. "github.com/xguox/coconut/controller"
 	_ "github.com/xguox/coconut/docs"
