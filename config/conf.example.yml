@@ -1,8 +1,19 @@
 server:
-  port: ":9090"
+  port: ":9876"
   secret_base_key: "IMPORTANT: CAN NOT OPEN SOURCE SECRET KEY BASE!!!!!!"
 database:
-  host: localhost
-  port: "3306"
-  basename: coconut_development
-  pwd: ''
+  host:
+  port: 3306
+  basename: coconut_production
+  pwd: root
+  username: root
+development:
+  host:
+  adapter: mysql2
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  reconnect: false
+  database: coconut_production
+  pool: 5
+  username: root
+  password: root
