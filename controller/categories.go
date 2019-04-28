@@ -22,7 +22,7 @@ import (
 // @Success 200 {string} json "{msg:"请求处理成功"}"
 // @Failure 422 {string} json "{msg:"请求参数有误"}"
 // @Failure 500 {string} json "{msg:"服务器错误"}"
-// @Router /admin/categories [post]
+// @Router /api/v1/admin/categories [post]
 func CreateCategory(c *gin.Context) {
 	v := model.CategoryValidator{}
 	if err := v.Bind(c); err != nil {

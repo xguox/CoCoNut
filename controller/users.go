@@ -11,6 +11,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateUser godoc
+// @Summary 添加新的 User
+// @Description 添加新的 User
+// @Accept json
+// @Produce json
+// @Tags user
+// @Param body body model.UserValidator true "创建User请求参数"
+// @Success 200 {string} json "{msg:"请求处理成功"}"
+// @Failure 422 {string} json "{msg:"请求参数有误"}"
+// @Failure 500 {string} json "{msg:"服务器错误"}"
+// @Router /api/v1/admin/users [post]
 func CreateUser(c *gin.Context) {
 	v := model.UserValidator{}
 	if err := v.Bind(c); err != nil {
@@ -55,7 +66,7 @@ func GetUser(c *gin.Context) {
 // @Failure 401 {string} json "{msg:"账号或密码有误"}"
 // @Failure 422 {string} json "{msg:"请求参数有误"}"
 // @Failure 500 {string} json "{msg:"服务器错误"}"
-// @Router /admin/login [post]
+// @Router /api/v1/admin/login [post]
 func UserLogin(c *gin.Context) {
 	v := model.LoginValidator{}
 	if err := v.Bind(c); err != nil {

@@ -1,4 +1,128 @@
 {
-  "swagger": "2.0",
-  "paths": {}
+    "info": {
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/admin/categories": {
+            "post": {
+                "description": "添加新的商品分类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "添加新的商品分类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "认证 Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "创建分类请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/model.CategoryValidator"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{msg:\"请求处理成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "422": {
+                        "description": "{msg:\"请求参数有误\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "{msg:\"服务器错误\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.CategoryValidator": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "slug"
+                    ],
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "slug": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "model.LoginValidator": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "required": [
+                        "email",
+                        "password"
+                    ],
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "model.UserValidator": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "required": [
+                        "username",
+                        "email",
+                        "password"
+                    ],
+                    "properties": {
+                        "email": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "username": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

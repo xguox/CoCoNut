@@ -58,7 +58,7 @@ type UserValidator struct {
 		Email    string `json:"email" binding:"required,email,is-uniq"`
 		Password string `json:"password" binding:"required,min=6,max=64"`
 	} `json:"user"`
-	UserModel User
+	UserModel User `json:"-"`
 }
 
 func (c *UserValidator) TableName() string {
