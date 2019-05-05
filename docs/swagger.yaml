@@ -45,7 +45,7 @@ info:
   contact: {}
   license: {}
 paths:
-  /admin/categories:
+  /api/v1/admin/categories:
     post:
       consumes:
       - application/json
@@ -81,3 +81,69 @@ paths:
       summary: 添加新的商品分类
       tags:
       - category
+  /api/v1/admin/login:
+    post:
+      consumes:
+      - application/json
+      description: 后台账号登录
+      parameters:
+      - description: 账号登录请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginValidator'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{msg:"请求处理成功"}'
+          schema:
+            type: string
+        "401":
+          description: '{msg:"账号或密码有误"}'
+          schema:
+            type: string
+        "422":
+          description: '{msg:"请求参数有误"}'
+          schema:
+            type: string
+        "500":
+          description: '{msg:"服务器错误"}'
+          schema:
+            type: string
+      summary: 后台账号登录
+      tags:
+      - auth
+  /api/v1/admin/users:
+    post:
+      consumes:
+      - application/json
+      description: 添加新的 User
+      parameters:
+      - description: 创建User请求参数
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserValidator'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{msg:"请求处理成功"}'
+          schema:
+            type: string
+        "422":
+          description: '{msg:"请求参数有误"}'
+          schema:
+            type: string
+        "500":
+          description: '{msg:"服务器错误"}'
+          schema:
+            type: string
+      summary: 添加新的 User
+      tags:
+      - user
